@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Studio - デザインQRコード作成</title>
+  <meta name="description" content="美しいQRコードを無料で作成。カスタムデザイン、ロゴ埋め込み、グラデーション対応。">
+  
+  <!-- React & QR Code Styling -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+      background-color: #FAFAFA;
+      color: #111;
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    .header {
+      border-bottom: 1px solid #E5E5E5;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFF;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: #000;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 4px;
+    }
+    
+    .logo-icon span {
+      background: #FFF;
+      border-radius: 1px;
+    }
+    
+    .logo-icon span:nth-child(5) {
+      background: #000;
+    }
+    
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+    
+    /* Main */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 48px;
+    }
+    
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Section */
+    .section {
+      margin-bottom: 28px;
+    }
+    
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+      color: #888;
+    }
+    
+    /* Input */
+    .input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #FFF;
+    }
+    
+    .input:focus {
+      border-color: #000;
+    }
+    
+    /* Template Grid */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    
+    @media (max-width: 600px) {
+      .template-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .template-card {
+      padding: 14px 10px;
+      border: 2px solid #E5E5E5;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #FFF;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    
+    .template-card:hover {
+      border-color: #CCC;
+    }
+    
+    .template-card.selected {
+      border-color: #000;
+    }
+    
+    .template-emoji {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    
+    .template-name {
+      font-size: 11px;
+      font-weight: 500;
+    }
+    
+    /* Style Buttons */
+    .style-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .style-btn {
+      padding: 10px 14px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #FFF;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .style-btn:hover {
+      border-color: #CCC;
+    }
+    
+    .style-btn.selected {
+      border-color: #000;
+      font-weight: 600;
+    }
+    
+    /* Color Row */
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .color-input {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 3px;
+    }
+    
+    .color-label {
+      font-size: 13px;
+      color: #555;
+    }
+    
+    /* Checkbox */
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    
+    .checkbox input {
+      width: 18px;
+      height: 18px;
+    }
+    
+    /* Upload */
+    .upload-label {
+      padding: 12px 20px;
+      border: 2px dashed #CCC;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    
+    .upload-label:hover {
+      border-color: #999;
+    }
+    
+    /* Preview */
+    .preview {
+      position: sticky;
+      top: 80px;
+    }
+    
+    .preview-card {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #E8E8E8;
+    }
+    
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .qr-container canvas,
+    .qr-container svg {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    
+    /* Buttons */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: #000;
+      color: #FFF;
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+    
+    .btn-secondary {
+      background: #FFF;
+      color: #000;
+      border: 2px solid #000;
+    }
+    
+    .btn-secondary:hover {
+      background: #000;
+      color: #FFF;
+    }
+    
+    /* Feature Card */
+    .feature-card {
+      padding: 20px;
+      background: #FFF;
+      border-radius: 12px;
+      border: 1px solid #E5E5E5;
+      margin-top: 16px;
+    }
+    
+    .feature-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .feature-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      line-height: 2;
+      color: #555;
+    }
+    
+    /* Footer */
+    .footer {
+      border-top: 1px solid #E5E5E5;
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 48px;
+    }
+    
+    /* Logo Preview */
+    .logo-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .logo-preview img {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .logo-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.5;
+      padding: 4px;
+    }
+    
+    .logo-remove:hover {
+      opacity: 1;
+    }
+    
+    /* Range Slider */
+    .range-container {
+      margin-top: 12px;
+    }
+    
+    .range-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    
+    .range-input {
+      width: 100%;
+    }
+    
+    /* Two Column */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 600px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useRef, useEffect } = React;
+    
+    // テンプレート定義
+    const templates = [
+      {
+        id: 'classic',
+        name: 'クラシック',
+        emoji: '■',
+        config: { dotType: 'square', cornerSquareType: 'square', cornerDotType: 'square', dotColor: '#000000', bgColor: '#FFFFFF', useGradient: false }
+      },
+      {
+        id: 'rounded',
+        name: 'ラウンド',
+        emoji: '●',
+        config: { dotType: 'rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#000000', bgColor: '#FFFFFF', useGradient: false }
+      },
+      {
+        id: 'dots',
+        name: 'ドット',
+        emoji: '◉',
+        config: { dotType: 'dots', cornerSquareType: 'dot', cornerDotType: 'dot', dotColor: '#000000', bgColor: '#FFFFFF', useGradient: false }
+      },
+      {
+        id: 'ocean',
+        name: 'オーシャン',
+        emoji: '🌊',
+        config: { dotType: 'rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#0077B6', dotColor2: '#00B4D8', bgColor: '#FFFFFF', useGradient: true, gradientType: 'linear' }
+      },
+      {
+        id: 'sunset',
+        name: 'サンセット',
+        emoji: '🌅',
+        config: { dotType: 'classy-rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#F72585', dotColor2: '#FCA311', bgColor: '#FFFFFF', useGradient: true, gradientType: 'linear' }
+      },
+      {
+        id: 'forest',
+        name: 'フォレスト',
+        emoji: '🌲',
+        config: { dotType: 'classy', cornerSquareType: 'square', cornerDotType: 'square', dotColor: '#2D6A4F', dotColor2: '#95D5B2', bgColor: '#FFFFFF', useGradient: true, gradientType: 'radial' }
+      },
+      {
+        id: 'neon',
+        name: 'ネオン',
+        emoji: '💜',
+        config: { dotType: 'dots', cornerSquareType: 'dot', cornerDotType: 'dot', dotColor: '#7B2CBF', dotColor2: '#E0AAFF', bgColor: '#10002B', useGradient: true, gradientType: 'linear' }
+      },
+      {
+        id: 'minimal',
+        name: 'ミニマル',
+        emoji: '◻',
+        config: { dotType: 'square', cornerSquareType: 'square', cornerDotType: 'square', dotColor: '#6B7280', bgColor: '#F9FAFB', useGradient: false }
+      },
+      {
+        id: 'corporate',
+        name: 'コーポレート',
+        emoji: '🏢',
+        config: { dotType: 'rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#1E3A8A', bgColor: '#FFFFFF', useGradient: false }
+      },
+      {
+        id: 'cherry',
+        name: 'チェリー',
+        emoji: '🌸',
+        config: { dotType: 'classy-rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#EC4899', dotColor2: '#FBB6CE', bgColor: '#FFF1F2', useGradient: true, gradientType: 'radial' }
+      },
+      {
+        id: 'gold',
+        name: 'ゴールド',
+        emoji: '✨',
+        config: { dotType: 'classy', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#B8860B', dotColor2: '#FFD700', bgColor: '#FFFEF0', useGradient: true, gradientType: 'linear' }
+      },
+      {
+        id: 'midnight',
+        name: 'ミッドナイト',
+        emoji: '🌙',
+        config: { dotType: 'rounded', cornerSquareType: 'extra-rounded', cornerDotType: 'dot', dotColor: '#E2E8F0', bgColor: '#0F172A', useGradient: false }
+      },
+    ];
+    
+    // ドットスタイル
+    const dotStyles = [
+      { id: 'square', name: '四角', icon: '■' },
+      { id: 'dots', name: 'ドット', icon: '●' },
+      { id: 'rounded', name: '角丸', icon: '▢' },
+      { id: 'classy', name: 'クラシー', icon: '◆' },
+      { id: 'classy-rounded', name: 'クラシー角丸', icon: '◇' },
+      { id: 'extra-rounded', name: '極丸', icon: '○' },
+    ];
+    
+    const cornerSquareStyles = [
+      { id: 'square', name: '四角', icon: '▣' },
+      { id: 'dot', name: 'ドット', icon: '◉' },
+      { id: 'extra-rounded', name: '角丸', icon: '▢' },
+    ];
+    
+    const cornerDotStyles = [
+      { id: 'square', name: '四角', icon: '■' },
+      { id: 'dot', name: 'ドット', icon: '●' },
+    ];
+    
+    function QRStudio() {
+      const [url, setUrl] = useState('https://example.com');
+      const [selectedTemplate, setSelectedTemplate] = useState('classic');
+      const [dotType, setDotType] = useState('square');
+      const [cornerSquareType, setCornerSquareType] = useState('square');
+      const [cornerDotType, setCornerDotType] = useState('square');
+      const [dotColor, setDotColor] = useState('#000000');
+      const [dotColor2, setDotColor2] = useState('#333333');
+      const [useGradient, setUseGradient] = useState(false);
+      const [gradientType, setGradientType] = useState('linear');
+      const [bgColor, setBgColor] = useState('#FFFFFF');
+      const [logo, setLogo] = useState(null);
+      const [logoSize, setLogoSize] = useState(0.4);
+      
+      const qrRef = useRef(null);
+      const qrCodeRef = useRef(null);
+      
+      // テンプレート適用
+      const applyTemplate = (template) => {
+        setSelectedTemplate(template.id);
+        const c = template.config;
+        setDotType(c.dotType);
+        setCornerSquareType(c.cornerSquareType);
+        setCornerDotType(c.cornerDotType);
+        setDotColor(c.dotColor);
+        setBgColor(c.bgColor);
+        setUseGradient(c.useGradient || false);
+        if (c.dotColor2) setDotColor2(c.dotColor2);
+        if (c.gradientType) setGradientType(c.gradientType);
+      };
+      
+      // QRコード生成
+      useEffect(() => {
+        if (!qrRef.current) return;
+        
+        const options = {
+          width: 280,
+          height: 280,
+          type: 'canvas',
+          data: url || 'https://example.com',
+          dotsOptions: {
+            type: dotType,
+            ...(useGradient ? {
+              gradient: {
+                type: gradientType,
+                rotation: gradientType === 'linear' ? 45 : 0,
+                colorStops: [
+                  { offset: 0, color: dotColor },
+                  { offset: 1, color: dotColor2 }
+                ]
+              }
+            } : {
+              color: dotColor
+            })
+          },
+          cornersSquareOptions: {
+            type: cornerSquareType,
+            color: dotColor
+          },
+          cornersDotOptions: {
+            type: cornerDotType,
+            color: dotColor
+          },
+          backgroundOptions: {
+            color: bgColor
+          },
+          imageOptions: {
+            crossOrigin: 'anonymous',
+            margin: 8,
+            imageSize: logoSize
+          },
+          qrOptions: {
+            errorCorrectionLevel: 'H'
+          }
+        };
+        
+        if (logo) {
+          options.image = logo;
+        }
+        
+        if (qrCodeRef.current) {
+          qrCodeRef.current.update(options);
+        } else {
+          qrCodeRef.current = new QRCodeStyling(options);
+          qrRef.current.innerHTML = '';
+          qrCodeRef.current.append(qrRef.current);
+        }
+      }, [url, dotType, cornerSquareType, cornerDotType, dotColor, dotColor2, useGradient, gradientType, bgColor, logo, logoSize]);
+      
+      // ロゴアップロード
+      const handleLogoUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => setLogo(reader.result);
+          reader.readAsDataURL(file);
+        }
+      };
+      
+      // ダウンロード
+      const download = (ext) => {
+        if (qrCodeRef.current) {
+          qrCodeRef.current.download({ extension: ext });
+        }
+      };
+      
+      return (
+        <div>
+          <header className="header">
+            <div className="logo">
+              <div className="logo-icon">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+              </div>
+              <span className="logo-text">QR Studio</span>
+            </div>
+          </header>
+          
+          <main className="main">
+            <div className="grid">
+              <div>
+                {/* URL入力 */}
+                <div className="section">
+                  <label className="section-title">URL / テキスト</label>
+                  <input
+                    type="text"
+                    className="input"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://your-url.com"
+                  />
+                </div>
+                
+                {/* テンプレート */}
+                <div className="section">
+                  <label className="section-title">テンプレート</label>
+                  <div className="template-grid">
+                    {templates.map((t) => (
+                      <div
+                        key={t.id}
+                        className={`template-card ${selectedTemplate === t.id ? 'selected' : ''}`}
+                        onClick={() => applyTemplate(t)}
+                      >
+                        <div className="template-emoji">{t.emoji}</div>
+                        <div className="template-name">{t.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* ドットスタイル */}
+                <div className="section">
+                  <label className="section-title">ドットスタイル</label>
+                  <div className="style-grid">
+                    {dotStyles.map((s) => (
+                      <button
+                        key={s.id}
+                        className={`style-btn ${dotType === s.id ? 'selected' : ''}`}
+                        onClick={() => setDotType(s.id)}
+                      >
+                        <span>{s.icon}</span>
+                        <span>{s.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* コーナースタイル */}
+                <div className="two-col">
+                  <div className="section">
+                    <label className="section-title">コーナー外枠</label>
+                    <div className="style-grid">
+                      {cornerSquareStyles.map((s) => (
+                        <button
+                          key={s.id}
+                          className={`style-btn ${cornerSquareType === s.id ? 'selected' : ''}`}
+                          onClick={() => setCornerSquareType(s.id)}
+                        >
+                          <span>{s.icon}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="section">
+                    <label className="section-title">コーナー内側</label>
+                    <div className="style-grid">
+                      {cornerDotStyles.map((s) => (
+                        <button
+                          key={s.id}
+                          className={`style-btn ${cornerDotType === s.id ? 'selected' : ''}`}
+                          onClick={() => setCornerDotType(s.id)}
+                        >
+                          <span>{s.icon}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* カラー設定 */}
+                <div className="section">
+                  <label className="section-title">カラー設定</label>
+                  <div className="color-row">
+                    <input
+                      type="color"
+                      className="color-input"
+                      value={dotColor}
+                      onChange={(e) => setDotColor(e.target.value)}
+                    />
+                    <span className="color-label">メインカラー</span>
+                  </div>
+                  
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={useGradient}
+                      onChange={(e) => setUseGradient(e.target.checked)}
+                    />
+                    グラデーションを使用
+                  </label>
+                  
+                  {useGradient && (
+                    <div style={{ marginTop: '12px' }}>
+                      <div className="color-row">
+                        <input
+                          type="color"
+                          className="color-input"
+                          value={dotColor2}
+                          onChange={(e) => setDotColor2(e.target.value)}
+                        />
+                        <span className="color-label">グラデーション終点色</span>
+                      </div>
+                      <div className="style-grid">
+                        <button
+                          className={`style-btn ${gradientType === 'linear' ? 'selected' : ''}`}
+                          onClick={() => setGradientType('linear')}
+                        >
+                          ↘ リニア
+                        </button>
+                        <button
+                          className={`style-btn ${gradientType === 'radial' ? 'selected' : ''}`}
+                          onClick={() => setGradientType('radial')}
+                        >
+                          ◎ ラジアル
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="color-row" style={{ marginTop: '16px' }}>
+                    <input
+                      type="color"
+                      className="color-input"
+                      value={bgColor}
+                      onChange={(e) => setBgColor(e.target.value)}
+                    />
+                    <span className="color-label">背景色</span>
+                  </div>
+                </div>
+                
+                {/* ロゴ */}
+                <div className="section">
+                  <label className="section-title">ロゴ（オプション）</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <label className="upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        style={{ display: 'none' }}
+                      />
+                      ＋ 画像をアップロード
+                    </label>
+                    {logo && (
+                      <div className="logo-preview">
+                        <img src={logo} alt="Logo" />
+                        <button className="logo-remove" onClick={() => setLogo(null)}>×</button>
+                      </div>
+                    )}
+                  </div>
+                  {logo && (
+                    <div className="range-container">
+                      <div className="range-label">ロゴサイズ: {Math.round(logoSize * 100)}%</div>
+                      <input
+                        type="range"
+                        className="range-input"
+                        min="0.2"
+                        max="0.5"
+                        step="0.05"
+                        value={logoSize}
+                        onChange={(e) => setLogoSize(parseFloat(e.target.value))}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* プレビュー */}
+              <div className="preview">
+                <div className="preview-card">
+                  <div className="qr-container" ref={qrRef}></div>
+                  <div className="btn-grid">
+                    <button className="btn btn-primary" onClick={() => download('png')}>PNG</button>
+                    <button className="btn btn-secondary" onClick={() => download('svg')}>SVG</button>
+                    <button className="btn btn-secondary" onClick={() => download('jpeg')}>JPEG</button>
+                  </div>
+                </div>
+                
+                <div className="feature-card">
+                  <div className="feature-title">✓ 特徴</div>
+                  <ul className="feature-list">
+                    <li>高解像度出力</li>
+                    <li>エラー訂正レベルH（30%復元可）</li>
+                    <li>ロゴ自動配置</li>
+                    <li>SVG出力対応</li>
+                    <li>完全無料・商用利用OK</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </main>
+          
+          <footer className="footer">
+            © 2025 QR Studio. Made with precision.
+          </footer>
+        </div>
+      );
+    }
+    
+    ReactDOM.createRoot(document.getElementById('root')).render(<QRStudio />);
+  </script>
+</body>
+</html>
