@@ -720,7 +720,7 @@
     </button>
 
     <nav class="nav">
-        <a onclick="showPage('main-page')">Works</a>
+        <a onclick="showPage('main-page', 'works')">Works</a>
         <a onclick="showPage('main-page', 'about')">About</a>
         <a onclick="showPage('note-page')">Note</a>
         <a onclick="showPage('contact-page')">Contact</a>
@@ -780,6 +780,22 @@
             <div class="masonry-item" onclick="openLightbox('apps', 5)"><div class="placeholder" style="height: 220px;"></div></div>
             <div class="masonry-item" onclick="openLightbox('apps', 6)"><div class="placeholder" style="height: 260px;"></div></div>
             <div class="masonry-item" onclick="openLightbox('apps', 7)"><div class="placeholder" style="height: 320px;"></div></div>
+        </div>
+    </div>
+
+    <!-- Services Gallery Page -->
+    <div id="services-page" class="page hidden gallery-page">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Services</h1>
+            <button class="back-btn" onclick="showPage('main-page')">← Back</button>
+        </div>
+        <div class="masonry" id="services-gallery">
+            <div class="masonry-item" onclick="openLightbox('services', 0)"><div class="placeholder" style="height: 280px;"></div></div>
+            <div class="masonry-item" onclick="openLightbox('services', 1)"><div class="placeholder" style="height: 220px;"></div></div>
+            <div class="masonry-item" onclick="openLightbox('services', 2)"><div class="placeholder" style="height: 320px;"></div></div>
+            <div class="masonry-item" onclick="openLightbox('services', 3)"><div class="placeholder" style="height: 200px;"></div></div>
+            <div class="masonry-item" onclick="openLightbox('services', 4)"><div class="placeholder" style="height: 260px;"></div></div>
+            <div class="masonry-item" onclick="openLightbox('services', 5)"><div class="placeholder" style="height: 300px;"></div></div>
         </div>
     </div>
 
@@ -873,9 +889,9 @@
                 お仕事のご依頼・ご相談はこちらから
             </p>
             <div class="contact-links">
-                <a href="mailto:hello@mamonis.studio" class="contact-link-item">
+                <a href="mailto:contact@mamonis.studio" class="contact-link-item">
                     <span class="contact-link-label">Email</span>
-                    <span class="contact-link-value">hello@mamonis.studio</span>
+                    <span class="contact-link-value">contact@mamonis.studio</span>
                 </a>
             </div>
         </div>
@@ -997,3 +1013,4 @@
     </script>
 </body>
 </html>
+          
