@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>digtile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    .app-container {
+      display: flex;
+      gap: 24px;
+      max-width: 800px;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .home-link {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      z-index: 50;
+    }
+    
+    .home-link:hover {
+      color: #000;
+    }
+    
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 340px;
+    }
+    
+    /* Ranking Sidebar */
+    .ranking-sidebar {
+      width: 220px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      max-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .ranking-title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: #999;
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .ranking-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    .ranking-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .ranking-scroll::-webkit-scrollbar-track {
+      background: #f5f5f5;
+      border-radius: 2px;
+    }
+    
+    .ranking-scroll::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 2px;
+    }
+    
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 4px;
+      border-bottom: 1px solid #f5f5f5;
+      transition: background 0.2s;
+    }
+    
+    .ranking-item:last-child {
+      border-bottom: none;
+    }
+    
+    .ranking-item.current-player {
+      background: #f0f0f0;
+      border-radius: 6px;
+    }
+    
+    .ranking-rank {
+      width: 24px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #999;
+    }
+    
+    /* 白黒ミニマル - 特別な色なし */
+    
+    .ranking-name {
+      flex: 1;
+      font-size: 11px;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .ranking-score {
+      font-size: 11px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    /* Start Screen */
+    .start-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+    }
+    
+    .logo {
+      font-size: 56px;
+      font-weight: 100;
+      letter-spacing: -3px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    
+    .tagline {
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+    
+    .rules {
+      font-size: 13px;
+      color: #666;
+      line-height: 2.2;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    
+    .rule-en {
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+    }
+    
+    .name-input-section {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    
+    .name-label {
+      font-size: 9px;
+      color: #999;
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    
+    .name-input {
+      padding: 12px 20px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      width: 180px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .name-input:focus {
+      border-color: #1a1a1a;
+    }
+    
+    .start-btn {
+      padding: 16px 56px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 6px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+    
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    
+    .shop-link {
+      font-size: 12px;
+      color: #888;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .shop-link:hover {
+      color: #1a1a1a;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 16px;
+      align-items: flex-end;
+      justify-content: center;
+      width: 100%;
+    }
+    
+    .stat-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-label {
+      font-size: 9px;
+      color: #999;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 200;
+      color: #1a1a1a;
+      letter-spacing: -1px;
+    }
+    
+    .combo {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      animation: pulse 0.4s ease;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+    
+    /* Board */
+    .board-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    
+    .board-container {
+      position: relative;
+      width: 260px;
+      height: 260px;
+    }
+    
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .cell {
+      position: relative;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      overflow: visible;
+    }
+    
+    .cell-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border-radius: 8px;
+      transition: all 0.12s ease;
+    }
+    
+    .cell-layer.layer-0 {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      z-index: 3;
+    }
+    
+    .cell-layer.layer-1 {
+      background: #e8e8e8;
+      z-index: 2;
+      transform: translate(3px, 3px);
+    }
+    
+    .cell-layer.layer-2 {
+      background: #d0d0d0;
+      z-index: 1;
+      transform: translate(6px, 6px);
+    }
+    
+    .cell-layer.clickable {
+      cursor: pointer;
+    }
+    
+    .cell-layer.clickable:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+    
+    .cell-layer.layer-1.clickable:hover {
+      transform: translate(3px, 3px) scale(1.1);
+    }
+    
+    .cell-layer.clickable:active {
+      transform: scale(0.95);
+    }
+    
+    .cell-layer.empty {
+      background: transparent;
+      box-shadow: none;
+      pointer-events: none;
+    }
+    
+    .cell-layer.hidden-tile {
+      color: #bbb !important;
+    }
+    
+    .cell-base {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #c0c0c0;
+      border-radius: 8px;
+      z-index: 0;
+    }
+    
+    /* Hold Area */
+    .hold-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .hold-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+    }
+    
+    .hold-label {
+      font-size: 9px;
+      color: #999;
+      letter-spacing: 2px;
+    }
+    
+    .hold-grid {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .hold-cell {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      overflow: visible;
+    }
+    
+    .hold-cell-base {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ddd;
+      border-radius: 8px;
+      z-index: 0;
+    }
+    
+    .hold-tile-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    
+    .hold-tile-layer.layer-0 {
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    
+    .hold-tile-layer.layer-1 {
+      background: #e8e8e8;
+      transform: translate(2px, 2px);
+    }
+    
+    .hold-tile-layer.layer-2 {
+      background: #d8d8d8;
+      transform: translate(4px, 4px);
+    }
+    
+    .hold-tile-layer.layer-3 {
+      background: #c8c8c8;
+      transform: translate(6px, 6px);
+    }
+    
+    .hold-tile-layer:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 20;
+    }
+    
+    /* Slot */
+    .slot-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    
+    .slot-container {
+      display: flex;
+      gap: 4px;
+      padding: 10px 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .slot-cell {
+      width: 34px;
+      height: 34px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 20px;
+    }
+    
+    .slot-cell.matching {
+      background: #e8e8e8;
+      transform: scale(1.15);
+      opacity: 0.5;
+    }
+    
+    .slot-cell.filled {
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Item Bar */
+    .item-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    
+    .item-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 16px;
+      background: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+    }
+    
+    .item-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    
+    .item-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .item-icon {
+      font-size: 18px;
+      color: #1a1a1a;
+    }
+    
+    .item-count {
+      font-size: 10px;
+      color: #888;
+      font-weight: 500;
+    }
+    
+    .item-count.zero {
+      color: #ccc;
+    }
+    
+    /* Tooltip */
+    .item-btn .tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    
+    .item-btn .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+    
+    .item-btn:hover .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+    
+    .shop-btn-small {
+      font-size: 11px;
+      color: #888;
+      background: none;
+      border: 1px solid #ddd;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .shop-btn-small:hover {
+      border-color: #1a1a1a;
+      color: #1a1a1a;
+    }
+    
+    /* Modals */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.3s ease;
+      padding: 20px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .modal {
+      background: #fff;
+      padding: 36px 44px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s ease;
+      max-width: 360px;
+      width: 100%;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-title {
+      font-size: 22px;
+      font-weight: 200;
+      letter-spacing: 6px;
+      color: #1a1a1a;
+      margin-bottom: 24px;
+    }
+    
+    .modal-subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    
+    .final-stats {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 28px;
+      justify-content: center;
+    }
+    
+    .final-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .final-label {
+      font-size: 9px;
+      color: #999;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    
+    .final-value {
+      font-size: 28px;
+      font-weight: 200;
+      color: #1a1a1a;
+    }
+    
+    .new-record {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 10px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+    
+    .your-rank {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    
+    .your-rank strong {
+      color: #1a1a1a;
+      font-size: 20px;
+    }
+    
+    .retry-btn, .close-btn {
+      padding: 14px 40px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .retry-btn:hover, .close-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Rescue Modal */
+    .rescue-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .rescue-btn {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      background: #f8f8f8;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .rescue-btn:hover:not(:disabled) {
+      background: #f0f0f0;
+      border-color: #1a1a1a;
+    }
+    
+    .rescue-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .rescue-btn-icon {
+      font-size: 24px;
+      width: 40px;
+    }
+    
+    .rescue-btn-info {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .rescue-btn-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+    
+    .rescue-btn-desc {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .rescue-btn-count {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      padding: 4px 12px;
+      background: #e8e8e8;
+      border-radius: 6px;
+    }
+    
+    .rescue-btn-count.zero {
+      color: #ccc;
+      background: #f5f5f5;
+    }
+    
+    .give-up-btn {
+      font-size: 12px;
+      color: #999;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+    }
+    
+    .give-up-btn:hover {
+      color: #1a1a1a;
+    }
+    
+    /* Shop */
+    .shop-section {
+      margin-bottom: 20px;
+    }
+    
+    .shop-section-title {
+      font-size: 10px;
+      color: #999;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    
+    .shop-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .shop-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .shop-item:hover {
+      background: #f0f0f0;
+    }
+    
+    .shop-item-icon {
+      font-size: 20px;
+      width: 32px;
+    }
+    
+    .shop-item-info {
+      flex: 1;
+      text-align: left;
+      margin-left: 8px;
+    }
+    
+    .shop-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+    
+    .shop-item-desc {
+      font-size: 10px;
+      color: #999;
+    }
+    
+    .shop-item-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    .shop-inventory {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px;
+      background: #f8f8f8;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .inventory-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .inventory-icon {
+      font-size: 18px;
+    }
+    
+    .inventory-count {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    .hidden { display: none !important; }
+    
+    @media (max-width: 640px) {
+      .app-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .ranking-sidebar {
+        width: 100%;
+        max-width: 340px;
+        max-height: 200px;
+        order: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="https://mamonis.studio/" class="home-link">MAMONIS</a>
+  
+  <div class="app-container">
+    <div class="game-container">
+      <!-- Start Screen -->
+      <div id="startScreen" class="start-screen">
+        <h1 class="logo">digtile</h1>
+        <div class="rules">
+          <p>▸ タイルをタップしてスロットへ<br><span class="rule-en">Tap tiles to add to slot</span></p>
+          <p>▸ 3つ揃えて消す<br><span class="rule-en">Match 3 to clear</span></p>
+          <p>▸ 上2層のタイルが取れる<br><span class="rule-en">Top 2 layers accessible</span></p>
+        </div>
+        <div class="name-input-section">
+          <label class="name-label">YOUR NAME</label>
+          <input type="text" class="name-input" id="playerNameInput" placeholder="Player" maxlength="12">
+        </div>
+        <button class="start-btn" onclick="startGame()">START</button>
+        <span class="shop-link" onclick="openShop()">SHOP</span>
+      </div>
+      
+      <!-- Game Screen -->
+      <div id="gameScreen" class="hidden">
+        <div class="header">
+          <div class="stat-section">
+            <span class="stat-label">SCORE</span>
+            <span class="stat-value" id="scoreDisplay">0</span>
+          </div>
+          <div class="stat-section">
+            <span class="stat-label">DEPTH</span>
+            <span class="stat-value" id="depthDisplay">1</span>
+          </div>
+          <div class="stat-section hidden" id="comboSection">
+            <span class="combo" id="comboDisplay"></span>
+          </div>
+        </div>
+        
+        <div class="board-wrapper">
+          <div class="board-container" id="boardContainer"></div>
+        </div>
+        
+        <div class="hold-wrapper">
+          <div class="hold-area">
+            <span class="hold-label">HOLD</span>
+            <div class="hold-grid" id="holdGrid"></div>
+          </div>
+        </div>
+        
+        <div class="slot-wrapper">
+          <div class="slot-container" id="slotContainer"></div>
+        </div>
+        
+        <div class="item-bar">
+          <button class="item-btn" id="undoBtn" onclick="useUndo()">
+            <span class="tooltip">UNDO</span>
+            <span class="item-icon">↩</span>
+            <span class="item-count" id="undoCount">1</span>
+          </button>
+          <button class="item-btn" id="holdBtn" onclick="useHold()">
+            <span class="tooltip">HOLD</span>
+            <span class="item-icon">▽</span>
+            <span class="item-count" id="holdCount">1</span>
+          </button>
+          <button class="item-btn" id="shuffleBtn" onclick="useShuffle()">
+            <span class="tooltip">SHUFFLE</span>
+            <span class="item-icon">⟳</span>
+            <span class="item-count" id="shuffleCount">1</span>
+          </button>
+          <button class="shop-btn-small" onclick="openShop()">SHOP</button>
+        </div>
+      </div>
+      
+      <!-- Game Over Modal -->
+      <div id="gameOverModal" class="overlay hidden">
+        <div class="modal">
+          <h2 class="modal-title">GAME OVER</h2>
+          <div id="newRecordBadge" class="new-record hidden">NEW RECORD!</div>
+          <div class="final-stats">
+            <div class="final-stat">
+              <span class="final-label">SCORE</span>
+              <span class="final-value" id="finalScore">0</span>
+            </div>
+            <div class="final-stat">
+              <span class="final-label">DEPTH</span>
+              <span class="final-value" id="finalDepth">1</span>
+            </div>
+          </div>
+          <div class="your-rank" id="yourRank"></div>
+          <button class="retry-btn" onclick="startGame()">RETRY</button>
+        </div>
+      </div>
+      
+      <!-- Rescue Modal (スロット満杯時) -->
+      <div id="rescueModal" class="overlay hidden">
+        <div class="modal">
+          <h2 class="modal-title">DANGER!</h2>
+          <p class="modal-subtitle">スロットが埋まりそう！<br>アイテムを使って続行できます</p>
+          
+          <div class="rescue-options">
+            <button class="rescue-btn" id="rescueUndo" onclick="rescueWithUndo()">
+              <span class="rescue-btn-icon">↩</span>
+              <div class="rescue-btn-info">
+                <div class="rescue-btn-name">UNDO</div>
+                <div class="rescue-btn-desc">一手戻る</div>
+              </div>
+              <span class="rescue-btn-count" id="rescueUndoCount">0</span>
+            </button>
+            
+            <button class="rescue-btn" id="rescueHold" onclick="rescueWithHold()">
+              <span class="rescue-btn-icon">▽</span>
+              <div class="rescue-btn-info">
+                <div class="rescue-btn-name">HOLD</div>
+                <div class="rescue-btn-desc">左3つを保留</div>
+              </div>
+              <span class="rescue-btn-count" id="rescueHoldCount">0</span>
+            </button>
+            
+            <button class="rescue-btn" onclick="openShopFromRescue()">
+              <span class="rescue-btn-icon">🛒</span>
+              <div class="rescue-btn-info">
+                <div class="rescue-btn-name">SHOP</div>
+                <div class="rescue-btn-desc">アイテムを購入</div>
+              </div>
+              <span class="rescue-btn-count">→</span>
+            </button>
+          </div>
+          
+          <button class="give-up-btn" onclick="confirmGameOver()">諦める...</button>
+        </div>
+      </div>
+      
+      <!-- Shop Modal -->
+      <div id="shopModal" class="overlay hidden">
+        <div class="modal">
+          <h2 class="modal-title">SHOP</h2>
+          
+          <div class="shop-inventory">
+            <div class="inventory-item">
+              <span class="inventory-icon">↩</span>
+              <span class="inventory-count" id="invUndo">0</span>
+            </div>
+            <div class="inventory-item">
+              <span class="inventory-icon">▽</span>
+              <span class="inventory-count" id="invHold">0</span>
+            </div>
+            <div class="inventory-item">
+              <span class="inventory-icon">⟳</span>
+              <span class="inventory-count" id="invShuffle">0</span>
+            </div>
+          </div>
+          
+          <div class="shop-section">
+            <div class="shop-section-title">SINGLE ITEMS</div>
+            <div class="shop-items">
+              <div class="shop-item" onclick="purchase('undo5')">
+                <span class="shop-item-icon">↩</span>
+                <div class="shop-item-info">
+                  <div class="shop-item-name">UNDO ×5</div>
+                  <div class="shop-item-desc">一手戻る</div>
+                </div>
+                <span class="shop-item-price">¥120</span>
+              </div>
+              <div class="shop-item" onclick="purchase('hold5')">
+                <span class="shop-item-icon">▽</span>
+                <div class="shop-item-info">
+                  <div class="shop-item-name">HOLD ×5</div>
+                  <div class="shop-item-desc">左3つを保留</div>
+                </div>
+                <span class="shop-item-price">¥120</span>
+              </div>
+              <div class="shop-item" onclick="purchase('shuffle5')">
+                <span class="shop-item-icon">⟳</span>
+                <div class="shop-item-info">
+                  <div class="shop-item-name">SHUFFLE ×5</div>
+                  <div class="shop-item-desc">盤面を並び替え</div>
+                </div>
+                <span class="shop-item-price">¥160</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="shop-section">
+            <div class="shop-section-title">PACKS</div>
+            <div class="shop-items">
+              <div class="shop-item" onclick="purchase('starter')">
+                <span class="shop-item-icon">📦</span>
+                <div class="shop-item-info">
+                  <div class="shop-item-name">Starter Pack</div>
+                  <div class="shop-item-desc">各アイテム ×3</div>
+                </div>
+                <span class="shop-item-price">¥250</span>
+              </div>
+              <div class="shop-item" onclick="purchase('value')">
+                <span class="shop-item-icon">🎁</span>
+                <div class="shop-item-info">
+                  <div class="shop-item-name">Value Pack</div>
+                  <div class="shop-item-desc">各アイテム ×10</div>
+                </div>
+                <span class="shop-item-price">¥800</span>
+              </div>
+            </div>
+          </div>
+          
+          <button class="close-btn" onclick="closeShop()">CLOSE</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Ranking Sidebar -->
+    <div class="ranking-sidebar">
+      <div class="ranking-title">RANKING</div>
+      <div class="ranking-scroll" id="rankingList"></div>
+    </div>
+  </div>
+
+  <script>
+    const TILE_TYPES = ['●', '■', '▲', '◆', '★', '♦', '✦', '◎', '✿', '⬡'];
+    const COLORS = [
+      '#1a1a1a', '#4a4a4a', '#2d2d2d', '#6b6b6b', '#3d3d3d',
+      '#5c5c5c', '#7a7a7a', '#8a8a8a', '#999999', '#ababab'
+    ];
+    
+    const SHOP_ITEMS = {
+      undo5: { undo: 5, hold: 0, shuffle: 0, price: 120 },
+      hold5: { undo: 0, hold: 5, shuffle: 0, price: 120 },
+      shuffle5: { undo: 0, hold: 0, shuffle: 5, price: 160 },
+      starter: { undo: 3, hold: 3, shuffle: 3, price: 250 },
+      value: { undo: 10, hold: 10, shuffle: 10, price: 800 }
+    };
+    
+    let layers = [];
+    let slot = [];
+    let holdStacks = [[], [], []];
+    let score = 0;
+    let depth = 1;
+    let combo = 0;
+    let lastMatch = null;
+    let history = [];
+    let items = { undo: 1, hold: 1, shuffle: 1 };
+    let inventory = { undo: 0, hold: 0, shuffle: 0 };
+    let gameOver = false;
+    let playerName = 'Player';
+    let rankings = [];
+    let currentPlayerRank = -1;
+    let playerId = null;
+    let isInRescueMode = false;
+    let shopOpenedFromRescue = false;
+    
+    // =============== STORAGE (API版) ===============
+    const API_BASE = '/api';
+    
+    // ブラウザ固有のID（課金用）
+    function getVisitorId() {
+      let id = localStorage.getItem('digtile_visitor_id');
+      if (!id) {
+        id = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('digtile_visitor_id', id);
+      }
+      return id;
+    }
+    
+    async function loadRankings() {
+      try {
+        const res = await fetch(`${API_BASE}/rankings`);
+        const data = await res.json();
+        rankings = data.rankings || [];
+      } catch (e) {
+        console.error('Failed to load rankings:', e);
+        rankings = [];
+      }
+      return rankings;
+    }
+    
+    async function saveRankings() {
+      // saveScoreで直接APIを叩くので、ここでは何もしない
+    }
+    
+    async function loadInventory() {
+      try {
+        const res = await fetch(`${API_BASE}/inventory?visitorId=${getVisitorId()}`);
+        const data = await res.json();
+        inventory = data.inventory || { undo: 0, hold: 0, shuffle: 0 };
+      } catch (e) {
+        console.error('Failed to load inventory:', e);
+        inventory = { undo: 0, hold: 0, shuffle: 0 };
+      }
+      return inventory;
+    }
+    
+    async function saveInventory() {
+      try {
+        await fetch(`${API_BASE}/inventory`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            visitorId: getVisitorId(),
+            inventory: inventory
+          })
+        });
+      } catch (e) {
+        console.error('Failed to save inventory:', e);
+      }
+    }
+    
+    function updateLiveRanking() {
+      if (gameOver) return;
+      
+      let rank = 1;
+      for (const entry of rankings) {
+        if (entry.id === playerId) continue;
+        if (entry.score >= score) rank++;
+      }
+      currentPlayerRank = rank;
+      
+      renderRankingList();
+    }
+    
+    async function saveScore() {
+      try {
+        const res = await fetch(`${API_BASE}/rankings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: playerId,
+            name: playerName.substring(0, 12),
+            score: score,
+            depth: depth
+          })
+        });
+        
+        const data = await res.json();
+        rankings = data.rankings || rankings;
+        currentPlayerRank = data.rank || 1;
+        renderRankingList();
+        
+        return currentPlayerRank;
+      } catch (e) {
+        console.error('Failed to save score:', e);
+        return 1;
+      }
+    }
+    
+    // =============== SHOP ===============
+    function openShop() {
+      updateShopInventory();
+      document.getElementById('shopModal').classList.remove('hidden');
+    }
+    
+    function openShopFromRescue() {
+      shopOpenedFromRescue = true;
+      document.getElementById('rescueModal').classList.add('hidden');
+      openShop();
+    }
+    
+    function closeShop() {
+      document.getElementById('shopModal').classList.add('hidden');
+      
+      if (shopOpenedFromRescue) {
+        shopOpenedFromRescue = false;
+        // 購入後に在庫をゲームに追加
+        items.undo += inventory.undo;
+        items.hold += inventory.hold;
+        items.shuffle += inventory.shuffle;
+        inventory = { undo: 0, hold: 0, shuffle: 0 };
+        saveInventory();
+        
+        // 救済モーダルに戻る
+        showRescueModal();
+      }
+    }
+    
+    function updateShopInventory() {
+      document.getElementById('invUndo').textContent = inventory.undo;
+      document.getElementById('invHold').textContent = inventory.hold;
+      document.getElementById('invShuffle').textContent = inventory.shuffle;
+    }
+    
+    async function purchase(itemId) {
+      const item = SHOP_ITEMS[itemId];
+      if (!item) return;
+      
+      // TODO: Stripe決済連携（下のAPI説明参照）
+      const confirmed = confirm(`${item.price}円で購入しますか？\n\n（デモモード：実際の課金は発生しません）`);
+      
+      if (confirmed) {
+        inventory.undo += item.undo;
+        inventory.hold += item.hold;
+        inventory.shuffle += item.shuffle;
+        
+        await saveInventory();
+        updateShopInventory();
+        
+        alert('購入完了！');
+      }
+    }
+    
+    // =============== RESCUE ===============
+    function showRescueModal() {
+      isInRescueMode = true;
+      
+      const undoCount = document.getElementById('rescueUndoCount');
+      const holdCount = document.getElementById('rescueHoldCount');
+      
+      undoCount.textContent = items.undo;
+      undoCount.className = 'rescue-btn-count' + (items.undo === 0 ? ' zero' : '');
+      document.getElementById('rescueUndo').disabled = items.undo <= 0 || history.length === 0;
+      
+      holdCount.textContent = items.hold;
+      holdCount.className = 'rescue-btn-count' + (items.hold === 0 ? ' zero' : '');
+      document.getElementById('rescueHold').disabled = items.hold <= 0 || slot.length < 3;
+      
+      document.getElementById('rescueModal').classList.remove('hidden');
+    }
+    
+    function hideRescueModal() {
+      isInRescueMode = false;
+      document.getElementById('rescueModal').classList.add('hidden');
+    }
+    
+    function rescueWithUndo() {
+      if (items.undo <= 0 || history.length === 0) return;
+      
+      hideRescueModal();
+      useUndo();
+    }
+    
+    function rescueWithHold() {
+      if (items.hold <= 0 || slot.length < 3) return;
+      
+      hideRescueModal();
+      useHold();
+    }
+    
+    function confirmGameOver() {
+      hideRescueModal();
+      endGame();
+    }
+    
+    // =============== GAME LOGIC ===============
+    function generateTile(d, typeCount) {
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        type: Math.floor(Math.random() * typeCount),
+        depth: d
+      };
+    }
+    
+    function generateLayer(d, typeCount) {
+      const tiles = [];
+      for (let i = 0; i < 25; i++) {
+        tiles.push(generateTile(d, typeCount));
+      }
+      return tiles;
+    }
+    
+    function getTypeCount() {
+      if (depth <= 5) return 5;
+      if (depth <= 15) return 7;
+      return 10;
+    }
+    
+    async function startGame() {
+      const nameInput = document.getElementById('playerNameInput');
+      playerName = nameInput.value.trim() || 'Player';
+      playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      
+      layers = [
+        generateLayer(1, 5),
+        generateLayer(2, 5),
+        generateLayer(3, 5)
+      ];
+      slot = [];
+      holdStacks = [[], [], []];
+      score = 0;
+      depth = 1;
+      combo = 0;
+      lastMatch = null;
+      history = [];
+      
+      items = { 
+        undo: 1 + inventory.undo, 
+        hold: 1 + inventory.hold, 
+        shuffle: 1 + inventory.shuffle 
+      };
+      inventory = { undo: 0, hold: 0, shuffle: 0 };
+      await saveInventory();
+      
+      gameOver = false;
+      isInRescueMode = false;
+      currentPlayerRank = -1;
+      
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+      document.getElementById('gameOverModal').classList.add('hidden');
+      document.getElementById('rescueModal').classList.add('hidden');
+      document.getElementById('shopModal').classList.add('hidden');
+      
+      await loadRankings();
+      updateLiveRanking();
+      render();
+    }
+    
+    function sortSlot(slotArray) {
+      return [...slotArray].sort((a, b) => a.type - b.type);
+    }
+    
+    function render() {
+      document.getElementById('scoreDisplay').textContent = score.toLocaleString();
+      document.getElementById('depthDisplay').textContent = depth;
+      
+      const comboSection = document.getElementById('comboSection');
+      if (combo > 1) {
+        comboSection.classList.remove('hidden');
+        document.getElementById('comboDisplay').textContent = `×${combo}`;
+      } else {
+        comboSection.classList.add('hidden');
+      }
+      
+      // Render board
+      const boardContainer = document.getElementById('boardContainer');
+      boardContainer.innerHTML = '';
+      
+      const boardGrid = document.createElement('div');
+      boardGrid.className = 'board-grid';
+      
+      for (let cellIdx = 0; cellIdx < 25; cellIdx++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        
+        const cellBase = document.createElement('div');
+        cellBase.className = 'cell-base';
+        cell.appendChild(cellBase);
+        
+        // 上の層にタイルがあるかチェック
+        const hasLayer0 = layers[0] && layers[0][cellIdx];
+        const hasLayer1 = layers[1] && layers[1][cellIdx];
+        
+        for (let layerIdx = 2; layerIdx >= 0; layerIdx--) {
+          const tile = layers[layerIdx] ? layers[layerIdx][cellIdx] : null;
+          const layerDiv = document.createElement('div');
+          layerDiv.className = `cell-layer layer-${layerIdx}`;
+          
+          if (tile) {
+            // 上にタイルがある場合は「?」を表示
+            const isHidden = (layerIdx === 1 && hasLayer0) || (layerIdx === 2);
+            
+            if (isHidden) {
+              layerDiv.textContent = '?';
+              layerDiv.classList.add('hidden-tile');
+            } else {
+              layerDiv.textContent = TILE_TYPES[tile.type];
+              layerDiv.style.color = COLORS[tile.type];
+            }
+            
+            // 上2層（layer 0 と layer 1）はクリック可能だが、上にタイルがあると不可
+            if (layerIdx === 0 || (layerIdx === 1 && !hasLayer0)) {
+              layerDiv.classList.add('clickable');
+              layerDiv.onclick = (e) => {
+                e.stopPropagation();
+                handleTileClick(layerIdx, cellIdx);
+              };
+            }
+          } else {
+            layerDiv.classList.add('empty');
+          }
+          
+          cell.appendChild(layerDiv);
+        }
+        
+        boardGrid.appendChild(cell);
+      }
+      
+      boardContainer.appendChild(boardGrid);
+      
+      // Render hold
+      const holdGrid = document.getElementById('holdGrid');
+      holdGrid.innerHTML = '';
+      
+      for (let i = 0; i < 3; i++) {
+        const holdCell = document.createElement('div');
+        holdCell.className = 'hold-cell';
+        
+        const cellBase = document.createElement('div');
+        cellBase.className = 'hold-cell-base';
+        holdCell.appendChild(cellBase);
+        
+        const stack = holdStacks[i];
+        const maxVisible = 4;
+        const startIdx = Math.max(0, stack.length - maxVisible);
+        
+        for (let j = startIdx; j < stack.length; j++) {
+          const tile = stack[j];
+          const layerIdx = stack.length - 1 - j;
+          const tileDiv = document.createElement('div');
+          tileDiv.className = `hold-tile-layer layer-${Math.min(layerIdx, 3)}`;
+          tileDiv.style.zIndex = j + 1;
+          tileDiv.textContent = TILE_TYPES[tile.type];
+          tileDiv.style.color = COLORS[tile.type];
+          
+          if (j === stack.length - 1) {
+            tileDiv.onclick = () => releaseHoldTile(i);
+          } else {
+            tileDiv.style.pointerEvents = 'none';
+          }
+          
+          holdCell.appendChild(tileDiv);
+        }
+        
+        holdGrid.appendChild(holdCell);
+      }
+      
+      // Render slot
+      const sortedSlot = sortSlot(slot);
+      const slotContainer = document.getElementById('slotContainer');
+      slotContainer.innerHTML = '';
+      for (let i = 0; i < 7; i++) {
+        const slotCell = document.createElement('div');
+        slotCell.className = 'slot-cell';
+        if (sortedSlot[i]) {
+          slotCell.classList.add('filled');
+          slotCell.textContent = TILE_TYPES[sortedSlot[i].type];
+          slotCell.style.color = COLORS[sortedSlot[i].type];
+        }
+        slotContainer.appendChild(slotCell);
+      }
+      
+      // Update item buttons
+      const undoCount = document.getElementById('undoCount');
+      const holdCount = document.getElementById('holdCount');
+      const shuffleCount = document.getElementById('shuffleCount');
+      
+      undoCount.textContent = items.undo;
+      undoCount.className = 'item-count' + (items.undo === 0 ? ' zero' : '');
+      document.getElementById('undoBtn').disabled = items.undo <= 0 || history.length === 0;
+      
+      holdCount.textContent = items.hold;
+      holdCount.className = 'item-count' + (items.hold === 0 ? ' zero' : '');
+      document.getElementById('holdBtn').disabled = items.hold <= 0 || slot.length < 3;
+      
+      shuffleCount.textContent = items.shuffle;
+      shuffleCount.className = 'item-count' + (items.shuffle === 0 ? ' zero' : '');
+      document.getElementById('shuffleBtn').disabled = items.shuffle <= 0;
+    }
+    
+    function renderRankingList() {
+      const container = document.getElementById('rankingList');
+      container.innerHTML = '';
+      
+      if (rankings.length === 0 && currentPlayerRank === -1) {
+        return;
+      }
+      
+      let displayList = [...rankings];
+      
+      if (!gameOver && score > 0) {
+        const tempEntry = {
+          id: playerId,
+          name: playerName,
+          score: score,
+          depth: depth,
+          isCurrentPlayer: true
+        };
+        
+        displayList = displayList.filter(r => r.id !== playerId);
+        
+        let inserted = false;
+        for (let i = 0; i < displayList.length; i++) {
+          if (score > displayList[i].score) {
+            displayList.splice(i, 0, tempEntry);
+            inserted = true;
+            break;
+          }
+        }
+        if (!inserted && displayList.length < 100) {
+          displayList.push(tempEntry);
+        }
+        
+        displayList = displayList.slice(0, 100);
+      }
+      
+      displayList.forEach((entry, idx) => {
+        const item = document.createElement('div');
+        item.className = 'ranking-item';
+        
+        if (entry.isCurrentPlayer || entry.id === playerId) {
+          item.classList.add('current-player');
+        }
+        
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'ranking-rank';
+        rankSpan.textContent = idx + 1;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'ranking-name';
+        nameSpan.textContent = entry.name + (entry.isCurrentPlayer ? ' ◀' : '');
+        
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'ranking-score';
+        scoreSpan.textContent = entry.score.toLocaleString();
+        
+        item.appendChild(rankSpan);
+        item.appendChild(nameSpan);
+        item.appendChild(scoreSpan);
+        container.appendChild(item);
+      });
+    }
+    
+    function checkMatches(currentSlot) {
+      const typeCounts = {};
+      
+      currentSlot.forEach((tile, idx) => {
+        if (!typeCounts[tile.type]) typeCounts[tile.type] = [];
+        typeCounts[tile.type].push(idx);
+      });
+      
+      for (const type in typeCounts) {
+        if (typeCounts[type].length >= 3) {
+          return { type: parseInt(type), indices: typeCounts[type].slice(0, 3) };
+        }
+      }
+      return null;
+    }
+    
+    function handleTileClick(layerIdx, cellIdx) {
+      if (gameOver || isInRescueMode) return;
+      if (layerIdx > 1) return;
+      
+      // 上にタイルがある場合はクリック不可
+      if (layerIdx === 1 && layers[0] && layers[0][cellIdx]) return;
+      
+      const tile = layers[layerIdx][cellIdx];
+      if (!tile) return;
+      
+      history.push({
+        layers: JSON.parse(JSON.stringify(layers)),
+        slot: [...slot],
+        holdStacks: holdStacks.map(s => [...s]),
+        score,
+        depth,
+        combo
+      });
+      
+      layers[layerIdx][cellIdx] = null;
+      slot.push(tile);
+      
+      const match = checkMatches(slot);
+      
+      if (match) {
+        setTimeout(() => {
+          const sortedSlot = sortSlot(slot);
+          const slotCells = document.querySelectorAll('.slot-cell');
+          
+          let matchCount = 0;
+          for (let i = 0; i < sortedSlot.length && matchCount < 3; i++) {
+            if (sortedSlot[i].type === match.type) {
+              if (slotCells[i]) slotCells[i].classList.add('matching');
+              matchCount++;
+            }
+          }
+        }, 50);
+        
+        setTimeout(() => {
+          slot = slot.filter((_, idx) => !match.indices.includes(idx));
+          
+          const newCombo = lastMatch === match.type ? combo + 1 : 1;
+          combo = newCombo;
+          lastMatch = match.type;
+          
+          const matchScore = 30 * (1 + newCombo * 0.1);
+          score += Math.floor(matchScore);
+          
+          checkLayerComplete();
+          updateLiveRanking();
+          render();
+        }, 280);
+      } else {
+        combo = 0;
+        lastMatch = null;
+        checkLayerComplete();
+        updateLiveRanking();
+        render();
+        
+        // スロットが埋まったら救済モーダル
+        if (slot.length >= 7) {
+          setTimeout(() => showRescueModal(), 100);
+        }
+      }
+    }
+    
+    function checkLayerComplete() {
+      if (layers[0].every(t => t === null)) {
+        layers.shift();
+        depth++;
+        const typeCount = getTypeCount();
+        layers.push(generateLayer(depth + 2, typeCount));
+        score += 100;
+      }
+    }
+    
+    async function endGame() {
+      gameOver = true;
+      
+      document.getElementById('finalScore').textContent = score.toLocaleString();
+      document.getElementById('finalDepth').textContent = depth;
+      
+      const rank = await saveScore();
+      
+      const newRecordBadge = document.getElementById('newRecordBadge');
+      if (rank <= 10) {
+        newRecordBadge.classList.remove('hidden');
+      } else {
+        newRecordBadge.classList.add('hidden');
+      }
+      
+      document.getElementById('yourRank').innerHTML = `あなたの順位: <strong>${rank}位</strong>`;
+      
+      document.getElementById('gameOverModal').classList.remove('hidden');
+    }
+    
+    function useUndo() {
+      if (items.undo <= 0 || history.length === 0) return;
+      
+      const lastState = history.pop();
+      layers = lastState.layers;
+      slot = lastState.slot;
+      holdStacks = lastState.holdStacks;
+      score = lastState.score;
+      depth = lastState.depth;
+      combo = lastState.combo;
+      items.undo--;
+      
+      updateLiveRanking();
+      render();
+    }
+    
+    function useHold() {
+      if (items.hold <= 0) return;
+      if (slot.length < 3) return;
+      
+      const tilesToHold = slot.slice(0, 3);
+      slot = slot.slice(3);
+      
+      for (let i = 0; i < 3; i++) {
+        holdStacks[i].push(tilesToHold[i]);
+      }
+      
+      items.hold--;
+      render();
+    }
+    
+    function releaseHoldTile(stackIdx) {
+      if (holdStacks[stackIdx].length === 0) return;
+      if (slot.length >= 7) return;
+      
+      const tile = holdStacks[stackIdx].pop();
+      slot.push(tile);
+      
+      const match = checkMatches(slot);
+      if (match) {
+        setTimeout(() => {
+          slot = slot.filter((_, i) => !match.indices.includes(i));
+          const newCombo = lastMatch === match.type ? combo + 1 : 1;
+          combo = newCombo;
+          lastMatch = match.type;
+          const matchScore = 30 * (1 + newCombo * 0.1);
+          score += Math.floor(matchScore);
+          updateLiveRanking();
+          render();
+        }, 280);
+      } else {
+        render();
+        if (slot.length >= 7) {
+          setTimeout(() => showRescueModal(), 100);
+        }
+      }
+    }
+    
+    function useShuffle() {
+      if (items.shuffle <= 0) return;
+      
+      layers = layers.map(layer => {
+        if (!layer) return layer;
+        const tiles = layer.filter(t => t !== null);
+        for (let i = tiles.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+        }
+        let tileIdx = 0;
+        return layer.map(t => t === null ? null : tiles[tileIdx++]);
+      });
+      
+      items.shuffle--;
+      render();
+    }
+    
+    // Init
+    (async function init() {
+      await loadRankings();
+      await loadInventory();
+      renderRankingList();
+      updateShopInventory();
+    })();
+  </script>
+</body>
+</html>
