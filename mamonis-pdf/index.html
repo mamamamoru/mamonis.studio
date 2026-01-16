@@ -295,7 +295,33 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .files-list-wrapper {
+      display: flex;
+      position: relative;
+    }
+
+    .file-numbers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      pointer-events: none;
+    }
+
+    .file-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      background: var(--fg);
+      color: var(--bg);
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      border-right: none;
+    }
+
     #files-list {
+      flex: 1;
       position: relative;
     }
 
@@ -323,27 +349,6 @@
 
     .file-group.drag-ghost {
       opacity: 0.3;
-    }
-
-    .file-group-inner {
-      display: flex;
-    }
-
-    .file-order {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 3rem;
-      background: var(--fg);
-      color: var(--bg);
-      font-size: 1.25rem;
-      font-weight: 700;
-      border-right: 1px solid var(--border);
-    }
-
-    .file-content {
-      flex: 1;
-      min-width: 0;
     }
 
     .file-header {
@@ -1025,7 +1030,10 @@
         <span class="files-title" data-i18n="filesTitle">Files</span>
         <span class="files-count" id="files-count"></span>
       </div>
-      <div id="files-list"></div>
+      <div class="files-list-wrapper">
+        <div class="file-numbers" id="file-numbers"></div>
+        <div id="files-list"></div>
+      </div>
       
       <div class="drop-zone-mini" id="drop-zone-mini">
         <span class="drop-zone-mini-text" data-i18n="addMore">+ Add more files</span>
@@ -1338,6 +1346,8 @@
 
     function renderFiles() {
       filesList.innerHTML = '';
+      const fileNumbers = document.getElementById('file-numbers');
+      fileNumbers.innerHTML = '';
       updateFilesCount();
       
       // 丸数字を生成する関数
@@ -1347,6 +1357,12 @@
       };
       
       pdfFiles.forEach((file, fileIndex) => {
+        // 番号を別コンテナに追加
+        const numberEl = document.createElement('div');
+        numberEl.className = 'file-number';
+        numberEl.dataset.fileIndex = fileIndex;
+        fileNumbers.appendChild(numberEl);
+        
         const group = document.createElement('div');
         group.className = 'file-group';
         group.dataset.fileIndex = fileIndex;
@@ -1356,33 +1372,28 @@
         const circledNum = getCircledNumber(file.originalIndex || fileIndex + 1);
         
         group.innerHTML = `
-          <div class="file-group-inner">
-            <div class="file-order">${fileIndex + 1}</div>
-            <div class="file-content">
-              <div class="file-header">
-                <div class="file-info">
-                  <span class="file-index">${circledNum}</span>
-                  <span class="file-name">${file.name}</span>
-                  <span class="file-meta">${file.pages.length}${i18n[currentLang].pages}</span>
-                </div>
-                <div class="file-actions">
-                  <button class="icon-btn expand-btn">${file.expanded ? '↑' : '↓'}</button>
-                  <button class="icon-btn remove-btn">×</button>
-                </div>
-              </div>
-              <div class="pages-container ${file.expanded ? 'expanded' : ''}">
-                <div class="pages-toolbar">
-                  <div class="pages-toolbar-left">
-                    <button class="select-all-btn ${allSelected ? 'checked' : ''}" data-file-index="${fileIndex}">
-                      <span class="checkbox"><span class="inner"></span></span>
-                      <span>${i18n[currentLang].selectAll}</span>
-                    </button>
-                    <span class="selection-count ${selectedCount > 0 ? 'has-selection' : ''}">${selectedCount}/${file.pages.length} ${i18n[currentLang].selected}</span>
-                  </div>
-                </div>
-                <div class="pages-grid" data-file-index="${fileIndex}"></div>
+          <div class="file-header">
+            <div class="file-info">
+              <span class="file-index">${circledNum}</span>
+              <span class="file-name">${file.name}</span>
+              <span class="file-meta">${file.pages.length}${i18n[currentLang].pages}</span>
+            </div>
+            <div class="file-actions">
+              <button class="icon-btn expand-btn">${file.expanded ? '↑' : '↓'}</button>
+              <button class="icon-btn remove-btn">×</button>
+            </div>
+          </div>
+          <div class="pages-container ${file.expanded ? 'expanded' : ''}">
+            <div class="pages-toolbar">
+              <div class="pages-toolbar-left">
+                <button class="select-all-btn ${allSelected ? 'checked' : ''}" data-file-index="${fileIndex}">
+                  <span class="checkbox"><span class="inner"></span></span>
+                  <span>${i18n[currentLang].selectAll}</span>
+                </button>
+                <span class="selection-count ${selectedCount > 0 ? 'has-selection' : ''}">${selectedCount}/${file.pages.length} ${i18n[currentLang].selected}</span>
               </div>
             </div>
+            <div class="pages-grid" data-file-index="${fileIndex}"></div>
           </div>
         `;
         
@@ -1390,6 +1401,8 @@
           file.expanded = !file.expanded;
           if (file.expanded) await generateThumbnails(file);
           renderFiles();
+          // サムネイル読み込み後に高さを再更新
+          setTimeout(updateFileNumberHeights, 100);
         });
         
         group.querySelector('.remove-btn').addEventListener('click', () => {
@@ -1460,6 +1473,22 @@
       
       // Initialize SortableJS
       initSortables();
+      
+      // 番号の高さを同期
+      updateFileNumberHeights();
+    }
+
+    function updateFileNumberHeights() {
+      const fileGroups = document.querySelectorAll('.file-group');
+      const fileNumbers = document.querySelectorAll('.file-number');
+      
+      fileGroups.forEach((group, i) => {
+        if (fileNumbers[i]) {
+          const height = group.offsetHeight;
+          fileNumbers[i].style.height = height + 'px';
+          fileNumbers[i].textContent = i + 1;
+        }
+      });
     }
 
     // ========== SORTABLE SYSTEM ==========
