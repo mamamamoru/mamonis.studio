@@ -1276,7 +1276,7 @@
       
       for (const file of files) {
         const fileNum = pdfFiles.length + 1;
-        let arrayBuffer;
+        let dataToStore;
         let pdfDoc;
         let pageCount;
         
@@ -1285,14 +1285,16 @@
         if (isImage) {
           // 画像をPDFに変換
           const pdfBytes = await imageToPdfData(file);
-          // Uint8ArrayをコピーしてArrayBufferとして保持
-          arrayBuffer = new Uint8Array(pdfBytes).buffer;
+          // Uint8Arrayをコピーして保持
+          dataToStore = new Uint8Array(pdfBytes);
           pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise;
           pageCount = 1;
         } else {
           // PDFをそのまま処理
-          arrayBuffer = await file.arrayBuffer();
-          pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          const originalBuffer = await file.arrayBuffer();
+          // ArrayBufferをコピーして保持（pdfjs-distがdetachするので）
+          dataToStore = new Uint8Array(originalBuffer.slice(0));
+          pdfDoc = await pdfjsLib.getDocument({ data: originalBuffer }).promise;
           pageCount = pdfDoc.numPages;
         }
         
@@ -1315,7 +1317,7 @@
           id: Date.now() + Math.random(),
           name: file.name,
           originalIndex: fileNum,
-          data: arrayBuffer,
+          data: dataToStore,
           pdfDoc,
           pages,
           expanded: false
