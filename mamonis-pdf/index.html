@@ -1142,7 +1142,7 @@
   </main>
 
   <footer>
-    <a href="https://mamonis.studio/">Â© 2026 Mamonis</a>
+    <a href="https://mamonis.studio/">© 2026 Mamonis</a>
   </footer>
 
   <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -1307,7 +1307,7 @@
       const totalPages = pdfFiles.reduce((sum, f) => sum + f.pages.length, 0);
       const countEl = document.getElementById('files-count');
       if (pdfFiles.length > 0) {
-        countEl.textContent = `${pdfFiles.length} files Â· ${totalPages} ${i18n[currentLang].totalPages}`;
+        countEl.textContent = `${pdfFiles.length} files · ${totalPages} ${i18n[currentLang].totalPages}`;
       } else {
         countEl.textContent = '';
       }
@@ -1341,8 +1341,8 @@
               <span class="file-meta">${file.pages.length}${i18n[currentLang].pages}</span>
             </div>
             <div class="file-actions">
-              <button class="icon-btn expand-btn">${file.expanded ? 'â†‘' : 'â†“'}</button>
-              <button class="icon-btn remove-btn">Ã—</button>
+              <button class="icon-btn expand-btn">${file.expanded ? '↑' : '↓'}</button>
+              <button class="icon-btn remove-btn">×</button>
             </div>
           </div>
           <div class="pages-container ${file.expanded ? 'expanded' : ''}">
