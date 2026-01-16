@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://unpkg.com/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -414,41 +415,29 @@
       background: var(--hover);
     }
 
-    /* Drop Indicator for files */
-    .drop-indicator {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--indicator);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 50;
+    /* SortableJS styles */
+    .sortable-ghost {
+      opacity: 0.4;
     }
 
-    .drop-indicator.visible {
-      opacity: 1;
+    .sortable-chosen {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     }
 
-    .drop-indicator::before,
-    .drop-indicator::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 6px;
-      height: 6px;
-      background: var(--indicator);
-      border-radius: 50%;
+    .sortable-drag {
+      opacity: 1 !important;
     }
 
-    .drop-indicator::before {
-      left: -3px;
+    .file-group.sortable-ghost {
+      opacity: 0.3;
     }
 
-    .drop-indicator::after {
-      right: -3px;
+    .page-thumb.sortable-ghost {
+      opacity: 0.3;
+    }
+
+    .page-thumb.sortable-chosen {
+      border-color: var(--fg);
     }
 
     /* Pages Container */
@@ -703,43 +692,6 @@
     .page-thumb.dragging .tooltip {
       opacity: 0;
       visibility: hidden;
-    }
-
-    /* Page Drop Indicator */
-    .page-drop-indicator {
-      position: absolute;
-      width: 2px;
-      top: 1rem;
-      bottom: 1rem;
-      background: var(--indicator);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      z-index: 50;
-    }
-
-    .page-drop-indicator.visible {
-      opacity: 1;
-    }
-
-    .page-drop-indicator::before,
-    .page-drop-indicator::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 6px;
-      height: 6px;
-      background: var(--indicator);
-      border-radius: 50%;
-    }
-
-    .page-drop-indicator::before {
-      top: -3px;
-    }
-
-    .page-drop-indicator::after {
-      bottom: -3px;
     }
 
     /* Options */
@@ -1041,27 +993,6 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--muted);
     }
-
-    /* Drag overlay */
-    .drag-overlay {
-      position: fixed;
-      pointer-events: none;
-      z-index: 10000;
-      transition: none;
-    }
-
-    .drag-overlay.file {
-      background: var(--surface);
-      border: 1px solid var(--fg);
-      padding: 0.875rem 1rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    }
-
-    .drag-overlay.page {
-      border: 1px solid var(--fg);
-      background: var(--surface);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-    }
   </style>
 </head>
 <body data-theme="light">
@@ -1095,7 +1026,6 @@
         <span class="files-count" id="files-count"></span>
       </div>
       <div id="files-list"></div>
-      <div class="drop-indicator" id="file-drop-indicator"></div>
       
       <div class="drop-zone-mini" id="drop-zone-mini">
         <span class="drop-zone-mini-text" data-i18n="addMore">+ Add more files</span>
@@ -1222,20 +1152,15 @@
     let globalPageIndex = 0;
     const options = { targetAll: true, targetSelected: false, merge: true, split: false, compress: false };
 
-    // Drag state
-    let dragState = {
-      type: null,
-      sourceFileIndex: null,
-      sourcePageIndex: null,
-      overlay: null
-    };
+    // Sortable instances
+    let fileSortable = null;
+    let pageSortables = [];
 
     const dropZone = document.getElementById('drop-zone');
     const dropZoneMini = document.getElementById('drop-zone-mini');
     const fileInput = document.getElementById('file-input');
     const filesContainer = document.getElementById('files-container');
     const filesList = document.getElementById('files-list');
-    const fileDropIndicator = document.getElementById('file-drop-indicator');
     const optionsEl = document.getElementById('options');
     const actionsEl = document.getElementById('actions');
     const loadingEl = document.getElementById('loading');
@@ -1461,13 +1386,6 @@
           </div>
         `;
         
-        // File drag
-        const header = group.querySelector('.file-header');
-        header.addEventListener('mousedown', (e) => {
-          if (e.target.closest('.icon-btn')) return;
-          startFileDrag(e, fileIndex, group);
-        });
-        
         group.querySelector('.expand-btn').addEventListener('click', async () => {
           file.expanded = !file.expanded;
           if (file.expanded) await generateThumbnails(file);
@@ -1533,262 +1451,81 @@
               renderFiles();
             });
             
-            // Page drag
-            thumb.addEventListener('mousedown', (e) => {
-              if (e.target.closest('.page-checkbox')) return;
-              startPageDrag(e, fileIndex, pageIndex, thumb);
-            });
-            
             pagesGrid.appendChild(thumb);
           });
         }
         
         filesList.appendChild(group);
       });
+      
+      // Initialize SortableJS
+      initSortables();
     }
 
-    // ========== DRAG SYSTEM ==========
+    // ========== SORTABLE SYSTEM ==========
     
-    function startFileDrag(e, fileIndex, element) {
-      e.preventDefault();
+    function initSortables() {
+      // Destroy existing sortables
+      if (fileSortable) {
+        fileSortable.destroy();
+        fileSortable = null;
+      }
+      pageSortables.forEach(s => s.destroy());
+      pageSortables = [];
       
-      const rect = element.getBoundingClientRect();
-      
-      dragState = {
-        type: 'file',
-        sourceFileIndex: fileIndex,
-        sourcePageIndex: null,
-        offsetX: e.clientX - rect.left,
-        offsetY: e.clientY - rect.top,
-        element: element,
-        overlay: null
-      };
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'drag-overlay file';
-      overlay.innerHTML = `
-        <div class="file-info">
-          <span class="file-index">${String(fileIndex + 1).padStart(2, '0')}</span>
-          <span class="file-name">${pdfFiles[fileIndex].name}</span>
-          <span class="file-meta">${pdfFiles[fileIndex].pages.length}${i18n[currentLang].pages}</span>
-        </div>
-      `;
-      overlay.style.width = rect.width + 'px';
-      overlay.style.left = e.clientX - dragState.offsetX + 'px';
-      overlay.style.top = e.clientY - dragState.offsetY + 'px';
-      document.body.appendChild(overlay);
-      
-      dragState.overlay = overlay;
-      element.classList.add('drag-ghost');
-      
-      document.addEventListener('mousemove', onDragMove);
-      document.addEventListener('mouseup', onDragEnd);
-    }
-
-    function startPageDrag(e, fileIndex, pageIndex, element) {
-      e.preventDefault();
-      
-      const rect = element.getBoundingClientRect();
-      const page = pdfFiles[fileIndex].pages[pageIndex];
-      
-      dragState = {
-        type: 'page',
-        sourceFileIndex: fileIndex,
-        sourcePageIndex: pageIndex,
-        offsetX: e.clientX - rect.left,
-        offsetY: e.clientY - rect.top,
-        element: element,
-        overlay: null
-      };
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'drag-overlay page';
-      overlay.style.width = rect.width + 'px';
-      overlay.style.height = rect.height + 'px';
-      overlay.style.left = e.clientX - dragState.offsetX + 'px';
-      overlay.style.top = e.clientY - dragState.offsetY + 'px';
-      
-      if (page.thumbnail) {
-        const canvas = page.thumbnail.cloneNode();
-        canvas.getContext('2d').drawImage(page.thumbnail, 0, 0);
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        overlay.appendChild(canvas);
+      // File list sortable
+      if (filesList.children.length > 0) {
+        fileSortable = new Sortable(filesList, {
+          animation: 200,
+          handle: '.file-header',
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          onEnd: (evt) => {
+            const oldIndex = evt.oldIndex;
+            const newIndex = evt.newIndex;
+            if (oldIndex !== newIndex) {
+              const [moved] = pdfFiles.splice(oldIndex, 1);
+              pdfFiles.splice(newIndex, 0, moved);
+              recalculateGlobalIndex();
+              renderFiles();
+            }
+          }
+        });
       }
       
-      document.body.appendChild(overlay);
-      
-      dragState.overlay = overlay;
-      element.classList.add('drag-ghost');
-      
-      document.addEventListener('mousemove', onDragMove);
-      document.addEventListener('mouseup', onDragEnd);
-    }
-
-    function onDragMove(e) {
-      if (!dragState.overlay) return;
-      
-      dragState.overlay.style.left = (e.clientX - dragState.offsetX) + 'px';
-      dragState.overlay.style.top = (e.clientY - dragState.offsetY) + 'px';
-      
-      if (dragState.type === 'file') {
-        updateFileDropIndicator(e);
-      } else if (dragState.type === 'page') {
-        updatePageDropIndicator(e);
-      }
-    }
-
-    function updateFileDropIndicator(e) {
-      const fileGroups = Array.from(document.querySelectorAll('.file-group'));
-      let targetIndex = pdfFiles.length;
-      let indicatorTop = 0;
-      
-      const listRect = filesList.getBoundingClientRect();
-      
-      for (let i = 0; i < fileGroups.length; i++) {
-        const group = fileGroups[i];
-        const rect = group.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-        
-        if (e.clientY < midY) {
-          targetIndex = i;
-          indicatorTop = rect.top - listRect.top - 2;
-          break;
-        } else {
-          targetIndex = i + 1;
-          indicatorTop = rect.bottom - listRect.top + 2;
-        }
-      }
-      
-      fileDropIndicator.style.top = indicatorTop + 'px';
-      fileDropIndicator.classList.add('visible');
-      
-      dragState.targetFileIndex = targetIndex > dragState.sourceFileIndex ? targetIndex - 1 : targetIndex;
-      if (targetIndex > dragState.sourceFileIndex) {
-        dragState.targetFileIndex = targetIndex - 1;
-      } else {
-        dragState.targetFileIndex = targetIndex;
-      }
-    }
-
-    function updatePageDropIndicator(e) {
-      const grids = document.querySelectorAll('.pages-grid');
-      let targetGrid = null;
-      let targetFileIndex = null;
-      
-      grids.forEach(grid => {
-        const rect = grid.getBoundingClientRect();
-        if (e.clientX >= rect.left && e.clientX <= rect.right &&
-            e.clientY >= rect.top && e.clientY <= rect.bottom) {
-          targetGrid = grid;
-          targetFileIndex = parseInt(grid.dataset.fileIndex);
-        }
+      // Page grids sortable
+      document.querySelectorAll('.pages-grid').forEach(grid => {
+        const fileIndex = parseInt(grid.dataset.fileIndex);
+        const sortable = new Sortable(grid, {
+          animation: 200,
+          group: 'pages',
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          filter: '.page-checkbox',
+          onEnd: (evt) => {
+            const fromFileIndex = parseInt(evt.from.dataset.fileIndex);
+            const toFileIndex = parseInt(evt.to.dataset.fileIndex);
+            const oldIndex = evt.oldIndex;
+            const newIndex = evt.newIndex;
+            
+            if (fromFileIndex === toFileIndex && oldIndex === newIndex) return;
+            
+            const [movedPage] = pdfFiles[fromFileIndex].pages.splice(oldIndex, 1);
+            pdfFiles[toFileIndex].pages.splice(newIndex, 0, movedPage);
+            
+            if (pdfFiles[fromFileIndex].pages.length === 0) {
+              pdfFiles.splice(fromFileIndex, 1);
+            }
+            
+            recalculateGlobalIndex();
+            renderFiles();
+            updateUI();
+          }
+        });
+        pageSortables.push(sortable);
       });
-      
-      document.querySelectorAll('.page-drop-indicator').forEach(el => el.remove());
-      
-      if (!targetGrid) {
-        dragState.targetFileIndex = null;
-        dragState.targetPageIndex = null;
-        return;
-      }
-      
-      const thumbs = Array.from(targetGrid.querySelectorAll('.page-thumb'));
-      let targetIndex = pdfFiles[targetFileIndex].pages.length;
-      let indicatorX = 0;
-      
-      const gridRect = targetGrid.getBoundingClientRect();
-      
-      for (let i = 0; i < thumbs.length; i++) {
-        const thumb = thumbs[i];
-        const fi = parseInt(thumb.dataset.fileIndex);
-        const pi = parseInt(thumb.dataset.pageIndex);
-        
-        if (fi === dragState.sourceFileIndex && pi === dragState.sourcePageIndex) continue;
-        
-        const rect = thumb.getBoundingClientRect();
-        const midX = rect.left + rect.width / 2;
-        
-        if (e.clientX < midX) {
-          targetIndex = i;
-          indicatorX = rect.left - gridRect.left - 2;
-          break;
-        } else {
-          targetIndex = i + 1;
-          indicatorX = rect.right - gridRect.left + 2;
-        }
-      }
-      
-      // サムネイルがない場合はパディング分オフセット
-      if (thumbs.length === 0) {
-        indicatorX = 16; // padding: 1rem
-      }
-      
-      if (targetFileIndex === dragState.sourceFileIndex && targetIndex > dragState.sourcePageIndex) {
-        targetIndex--;
-      }
-      
-      const indicator = document.createElement('div');
-      indicator.className = 'page-drop-indicator visible';
-      indicator.style.left = indicatorX + 'px';
-      targetGrid.appendChild(indicator);
-      
-      dragState.targetFileIndex = targetFileIndex;
-      dragState.targetPageIndex = targetIndex;
-    }
-
-    function onDragEnd(e) {
-      document.removeEventListener('mousemove', onDragMove);
-      document.removeEventListener('mouseup', onDragEnd);
-      
-      fileDropIndicator.classList.remove('visible');
-      document.querySelectorAll('.page-drop-indicator').forEach(el => el.remove());
-      
-      if (dragState.overlay) {
-        dragState.overlay.remove();
-      }
-      
-      if (dragState.element) {
-        dragState.element.classList.remove('drag-ghost');
-      }
-      
-      if (dragState.type === 'file' && dragState.targetFileIndex !== undefined && dragState.targetFileIndex !== null) {
-        moveFile(dragState.sourceFileIndex, dragState.targetFileIndex);
-      } else if (dragState.type === 'page' && dragState.targetFileIndex !== null && dragState.targetPageIndex !== null) {
-        movePage(
-          dragState.sourceFileIndex,
-          dragState.sourcePageIndex,
-          dragState.targetFileIndex,
-          dragState.targetPageIndex
-        );
-      }
-      
-      dragState = { type: null, sourceFileIndex: null, sourcePageIndex: null, overlay: null };
-    }
-
-    function moveFile(fromIndex, toIndex) {
-      if (fromIndex === toIndex) return;
-      
-      const [moved] = pdfFiles.splice(fromIndex, 1);
-      pdfFiles.splice(toIndex, 0, moved);
-      
-      recalculateGlobalIndex();
-      renderFiles();
-    }
-
-    function movePage(fromFileIndex, fromPageIndex, toFileIndex, toPageIndex) {
-      if (fromFileIndex === toFileIndex && fromPageIndex === toPageIndex) return;
-      
-      const [movedPage] = pdfFiles[fromFileIndex].pages.splice(fromPageIndex, 1);
-      pdfFiles[toFileIndex].pages.splice(toPageIndex, 0, movedPage);
-      
-      if (pdfFiles[fromFileIndex].pages.length === 0) {
-        pdfFiles.splice(fromFileIndex, 1);
-      }
-      
-      recalculateGlobalIndex();
-      renderFiles();
-      updateUI();
     }
 
     async function generateThumbnails(file) {
