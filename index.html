@@ -242,7 +242,7 @@
 
         .work-item {
             display: grid;
-            grid-template-columns: 3rem 1fr auto;
+            grid-template-columns: 3rem 1fr auto auto;
             align-items: center;
             gap: 2rem;
             padding: 2rem 1.5rem;
@@ -300,6 +300,7 @@
         }
 
         .work-arrow {
+            grid-column: 4 / 5;
             font-size: 2.2rem;
             opacity: 0;
             transform: translateX(-2rem);
@@ -312,34 +313,34 @@
             transform: translateX(-0.5rem);
 
         .work-desc {
-            grid-column: 2 / 3;
+            grid-column: 3 / 4;
             font-size: 0.85rem;
             opacity: 0;
-            max-height: 0;
+            white-space: nowrap;
             overflow: hidden;
-            transition: opacity 0.4s, max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-top: -0.5rem;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding-right: 1rem;
+            text-align: right;
         }
 
         .work-item:hover .work-desc {
             opacity: 0.6;
-            max-height: 3rem;
         }
         }
 
         .work-desc {
-            grid-column: 2 / 3;
+            grid-column: 3 / 4;
             font-size: 0.85rem;
             opacity: 0;
-            max-height: 0;
+            white-space: nowrap;
             overflow: hidden;
-            transition: opacity 0.4s, max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-top: -0.5rem;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding-right: 1rem;
+            text-align: right;
         }
 
         .work-item:hover .work-desc {
             opacity: 0.6;
-            max-height: 3rem;
         }
 
         /* About */
@@ -871,26 +872,26 @@
             <a href="https://mamonis.studio/qr/" target="_blank" class="work-item">
                 <span class="work-num">01</span>
                 <span class="work-title">QR</span>
-                <span class="work-arrow">→</span>
                 <span class="work-desc">QRコードを簡単に生成できるツール</span>
+                <span class="work-arrow">→</span>
             </a>
             <a href="https://mamonis.studio/timer/" target="_blank" class="work-item">
                 <span class="work-num">02</span>
                 <span class="work-title">Timer</span>
-                <span class="work-arrow">→</span>
                 <span class="work-desc">シンプルで使いやすいタイマー</span>
+                <span class="work-arrow">→</span>
             </a>
             <a href="https://mamonis.studio/digtile/" target="_blank" class="work-item">
                 <span class="work-num">03</span>
                 <span class="work-title">Digtile</span>
-                <span class="work-arrow">→</span>
                 <span class="work-desc">デジタルタイルパズルゲーム</span>
+                <span class="work-arrow">→</span>
             </a>
             <a href="https://mamonis.studio/mamonis-pdf/" target="_blank" class="work-item">
                 <span class="work-num">04</span>
                 <span class="work-title">PDF</span>
+                <span class="work-desc">PDFの編集・変換ツール</span>
                 <span class="work-arrow">→</span>
-                <span class="work-desc">PDFの結合・分割ツール</span>
             </a>
         </div>
     </div>
@@ -996,7 +997,7 @@
             <button class="back-btn" onclick="showPage('main-page')">← Back</button>
         </div>
         <div class="works-list">
-            <a href="mailto:contact@mamonis.studio" class="work-item">
+            <a href="/cdn-cgi/l/email-protection#e98a86879d888a9da98488848687809ac79a9d9c8d8086" class="work-item">
                 <span class="work-num">01</span>
                 <span class="work-title">Email</span>
                 <span class="work-arrow">→</span>
@@ -1014,7 +1015,7 @@
         <button class="lightbox-nav lightbox-next" onclick="nextLightbox()">→</button>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Theme Toggle
         function toggleTheme() {
             const body = document.body;
