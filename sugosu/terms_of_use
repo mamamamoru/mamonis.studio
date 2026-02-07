@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sugosu - Terms of Use / 利用規約</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif; line-height: 1.8; color: #111; background: #fff; padding: 24px; max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.4em; margin-bottom: 8px; }
+  h2 { font-size: 1.1em; margin-top: 28px; margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  p, li { font-size: 0.95em; margin-bottom: 8px; }
+  ul { padding-left: 20px; }
+  .lang-toggle { text-align: right; margin-bottom: 16px; }
+  .lang-toggle a { color: #555; text-decoration: underline; cursor: pointer; font-size: 0.9em; }
+  .updated { color: #888; font-size: 0.85em; margin-bottom: 24px; }
+</style>
+<script>
+  function toggleLang(lang) {
+    document.querySelectorAll('.ja').forEach(el => el.style.display = lang === 'ja' ? 'block' : 'none');
+    document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+    document.querySelectorAll('.zh').forEach(el => el.style.display = lang === 'zh' ? 'block' : 'none');
+  }
+</script>
+</head>
+<body>
+<div class="lang-toggle">
+  <a onclick="toggleLang('ja')">日本語</a> |
+  <a onclick="toggleLang('en')">English</a> |
+  <a onclick="toggleLang('zh')">中文</a>
+</div>
+
+<!-- ===== JAPANESE ===== -->
+<div class="ja">
+<h1>利用規約</h1>
+<p class="updated">最終更新日: 2026年2月7日</p>
+
+<p>本利用規約（以下「本規約」）は、mamonis.studio（以下「当方」）が提供するアプリ「sugosu」（以下「本アプリ」）の利用条件を定めるものです。本アプリをご利用いただいた時点で、本規約に同意したものとみなします。</p>
+
+<h2>1. サービスの内容</h2>
+<p>本アプリは、環境データ（気温・湿度・気圧・PM2.5・UV・花粉・降水）と体調記録を統合し、暮らしやすさスコアを提供するアプリケーションです。</p>
+
+<h2>2. 医療免責事項</h2>
+<p>本アプリは医療アプリではありません。表示される情報（スコア、AI分析結果、体調予測等）は参考値であり、医療上の診断・治療・予防を目的としたものではありません。体調に不安がある場合は、必ず医療機関を受診してください。本アプリの情報に基づく判断により生じた損害について、当方は一切の責任を負いません。</p>
+
+<h2>3. データについて</h2>
+<p>本アプリのデータはすべてユーザーのデバイス内に保存されます。デバイスの故障・紛失・アプリの削除等によるデータ消失について、当方は一切の責任を負いません。重要なデータはエクスポート機能をご利用のうえバックアップを取ることを推奨します。</p>
+
+<h2>4. 環境データの精度</h2>
+<p>環境データはOpen-Meteo APIより取得しています。データの正確性・完全性・即時性について、当方は保証いたしません。通信障害・API障害等によりデータが取得できない場合があります。</p>
+
+<h2>5. 課金について</h2>
+<p>プレミアム機能はApp Store / Google Play経由のアプリ内課金でご利用いただけます。</p>
+<ul>
+  <li>月額プラン: 購入確認後、Apple/Googleアカウントに課金されます。現在の期間終了の24時間前までにキャンセルしない限り、自動更新されます。</li>
+  <li>年額プラン: 月額プランと同様の自動更新です。</li>
+  <li>買い切りプラン: 一度の支払いで永久にご利用いただけます。</li>
+</ul>
+<p>サブスクリプションの管理・解約は、デバイスの設定画面またはApp Store / Google Playの管理画面から行えます。</p>
+
+<h2>6. 禁止事項</h2>
+<ul>
+  <li>本アプリのリバースエンジニアリング・逆コンパイル・解析</li>
+  <li>本アプリの改変・再配布</li>
+  <li>不正な方法による課金の回避</li>
+  <li>その他、当方が不適切と判断する行為</li>
+</ul>
+
+<h2>7. 免責事項</h2>
+<p>当方は、本アプリの利用により生じた直接的・間接的な損害について、一切の責任を負いません。本アプリは「現状有姿」で提供され、明示・黙示を問わずいかなる保証も行いません。</p>
+
+<h2>8. 規約の変更</h2>
+<p>当方は、必要に応じて本規約を変更できるものとします。変更後の規約は本ページに掲載された時点で効力を生じます。</p>
+
+<h2>9. 準拠法・管轄</h2>
+<p>本規約は日本法に準拠し、本規約に関する紛争については、東京地方裁判所を第一審の専属的合意管轄裁判所とします。</p>
+
+<h2>10. お問い合わせ</h2>
+<p>mamonis.studio<br>メール: contact@mamonis.studio</p>
+</div>
+
+<!-- ===== ENGLISH ===== -->
+<div class="en" style="display:none">
+<h1>Terms of Use</h1>
+<p class="updated">Last updated: February 7, 2026</p>
+
+<p>These Terms of Use ("Terms") govern your use of the "sugosu" application ("the App") provided by mamonis.studio ("we"). By using the App, you agree to these Terms.</p>
+
+<h2>1. Service Description</h2>
+<p>The App integrates environmental data (temperature, humidity, barometric pressure, PM2.5, UV, pollen, precipitation) with health records to provide a comfort score.</p>
+
+<h2>2. Medical Disclaimer</h2>
+<p>This App is not a medical application. All information displayed (scores, AI analysis, health predictions, etc.) is for reference only and is not intended for medical diagnosis, treatment, or prevention. If you have health concerns, please consult a healthcare professional. We are not liable for any damages resulting from decisions based on this App's information.</p>
+
+<h2>3. Data</h2>
+<p>All App data is stored on your device. We are not responsible for data loss due to device failure, loss, or app deletion. We recommend using the export feature to back up important data.</p>
+
+<h2>4. Environmental Data Accuracy</h2>
+<p>Environmental data is retrieved from the Open-Meteo API. We do not guarantee the accuracy, completeness, or timeliness of this data. Data may be unavailable due to network or API outages.</p>
+
+<h2>5. Purchases</h2>
+<p>Premium features are available via in-app purchases through the App Store / Google Play.</p>
+<ul>
+  <li>Monthly plan: Charged to your Apple/Google account upon confirmation. Auto-renews unless canceled at least 24 hours before the end of the current period.</li>
+  <li>Annual plan: Same auto-renewal terms as monthly.</li>
+  <li>Lifetime plan: One-time payment for permanent access.</li>
+</ul>
+<p>Manage or cancel subscriptions in your device settings or App Store / Google Play account settings.</p>
+
+<h2>6. Prohibited Actions</h2>
+<ul>
+  <li>Reverse engineering, decompiling, or analyzing the App</li>
+  <li>Modifying or redistributing the App</li>
+  <li>Circumventing payment mechanisms through unauthorized means</li>
+  <li>Any other actions we deem inappropriate</li>
+</ul>
+
+<h2>7. Disclaimer</h2>
+<p>We are not liable for any direct or indirect damages arising from use of the App. The App is provided "as is" without warranties of any kind, express or implied.</p>
+
+<h2>8. Changes to Terms</h2>
+<p>We may modify these Terms as needed. Changes take effect when posted on this page.</p>
+
+<h2>9. Governing Law</h2>
+<p>These Terms are governed by the laws of Japan. Any disputes shall be subject to the exclusive jurisdiction of the Tokyo District Court.</p>
+
+<h2>10. Contact</h2>
+<p>mamonis.studio<br>Email: contact@mamonis.studio</p>
+</div>
+
+<!-- ===== CHINESE ===== -->
+<div class="zh" style="display:none">
+<h1>使用条款</h1>
+<p class="updated">最后更新: 2026年2月7日</p>
+
+<p>本使用条款（以下简称"本条款"）规定mamonis.studio（以下简称"我们"）提供的应用程序"sugosu"（以下简称"本应用"）的使用条件。使用本应用即表示您同意本条款。</p>
+
+<h2>1. 服务内容</h2>
+<p>本应用整合环境数据（气温、湿度、气压、PM2.5、UV、花粉、降水）和健康记录，提供舒适度评分。</p>
+
+<h2>2. 医疗免责声明</h2>
+<p>本应用不是医疗应用。显示的所有信息（评分、AI分析结果、健康预测等）仅供参考，不用于医疗诊断、治疗或预防目的。如有健康疑虑，请咨询医疗专业人员。对于基于本应用信息做出的判断所造成的损害，我们不承担任何责任。</p>
+
+<h2>3. 数据</h2>
+<p>本应用的所有数据均存储在您的设备上。对于设备故障、丢失或应用删除导致的数据丢失，我们不承担任何责任。建议使用导出功能备份重要数据。</p>
+
+<h2>4. 环境数据准确性</h2>
+<p>环境数据通过Open-Meteo API获取。我们不保证数据的准确性、完整性或及时性。由于网络或API故障，数据可能无法获取。</p>
+
+<h2>5. 购买</h2>
+<p>高级功能可通过App Store / Google Play的应用内购买使用。</p>
+<ul>
+  <li>月度计划: 确认后向您的Apple/Google账户收费。除非在当前期间结束前24小时取消，否则自动续订。</li>
+  <li>年度计划: 与月度计划相同的自动续订条款。</li>
+  <li>买断计划: 一次性支付永久使用。</li>
+</ul>
+<p>可在设备设置或App Store / Google Play账户设置中管理或取消订阅。</p>
+
+<h2>6. 禁止行为</h2>
+<ul>
+  <li>对本应用进行逆向工程、反编译或分析</li>
+  <li>修改或再分发本应用</li>
+  <li>通过未经授权的方式规避付款</li>
+  <li>我们认为不当的其他行为</li>
+</ul>
+
+<h2>7. 免责声明</h2>
+<p>对于使用本应用产生的任何直接或间接损害，我们不承担任何责任。本应用按"现状"提供，不提供任何明示或暗示的保证。</p>
+
+<h2>8. 条款变更</h2>
+<p>我们可根据需要修改本条款。变更在本页面发布后生效。</p>
+
+<h2>9. 适用法律</h2>
+<p>本条款受日本法律管辖。任何争议应由东京地方法院专属管辖。</p>
+
+<h2>10. 联系方式</h2>
+<p>mamonis.studio<br>邮箱: contact@mamonis.studio</p>
+</div>
+
+</body>
+</html>
