@@ -15,6 +15,8 @@ ThreadsAuto は、Claude AI を使って Threads への投稿を完全自動化�
 
 - **AI Generation**: Claude API でユーザーのスタイルに合わせた投稿を自動生成
 - **Auto Schedule**: 設定した時間に自動投稿
+- **Auto Reply**: リプライに AI が自動返信（承認制 or 完全自動）
+- **Smart Editing**: ワンクリックで投稿を調整（短く/長く/トーン変更/再生成）
 - **Conversation-based Setup**: 会話形式で AI 設定を作成
 - **Multi-account Support**: 複数の Threads アカウントを一元管理
 - **Insights**: エンゲージメント分析とレポート
@@ -62,6 +64,9 @@ External APIs
 - `threads_accounts` - Threads アカウント
 - `ai_profiles` - AI 設定プロフィール
 - `posts` - 投稿データ
+- `post_edits` - 投稿編集履歴
+- `replies` - リプライデータ
+- `reply_settings` - リプライ自動返信設定
 - `insights` - インサイトデータ
 - `subscriptions` - サブスクリプション
 
@@ -132,6 +137,7 @@ NEXTAUTH_SECRET=
 - [x] UI/UX デザイン
 - [ ] 認証システム (Threads OAuth)
 - [ ] AI 生成機能
+- [ ] 投稿編集機能（基本）
 - [ ] スケジュール投稿
 - [ ] ダッシュボード
 
@@ -140,8 +146,12 @@ NEXTAUTH_SECRET=
 - [ ] 複数アカウント対応
 - [ ] インサイト取得
 - [ ] 会話形式 AI 設定
+- [ ] リプライ自動返信（セーフモード）
+- [ ] 投稿編集（クイック編集）
 
 ### Phase 3: Growth (Week 11-16)
+- [ ] リプライ自動返信（完全自動モード）
+- [ ] センチメント分析
 - [ ] 画像投稿対応
 - [ ] RSS 連携
 - [ ] A/B テスト機能
