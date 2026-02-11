@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スケジュール - ThreadsAuto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="text-lg font-medium text-gray-900">
+        ThreadsAuto
+      </div>
+      <div class="flex items-center gap-4">
+        <select class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
+          <option>@username</option>
+        </select>
+        
+        <select 
+          id="langSelect" 
+          class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2"
+          onchange="switchLanguage(this.value)"
+        >
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white border-r border-gray-200">
+      <nav class="p-4 space-y-1">
+        <a href="dashboard-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">ダッシュボード</span>
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="zh">仪表板</span>
+        </a>
+        <a href="posts-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">投稿管理</span>
+          <span data-lang="en">Posts</span>
+          <span data-lang="zh">帖子管理</span>
+        </a>
+        <a href="ai-settings-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">AI 設定</span>
+          <span data-lang="en">AI Settings</span>
+          <span data-lang="zh">AI 设置</span>
+        </a>
+        <a href="schedule-ja.html" class="block px-3 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-lg">
+          <span data-lang="ja">スケジュール</span>
+          <span data-lang="en">Schedule</span>
+          <span data-lang="zh">时间表</span>
+        </a>
+        <a href="insights-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">インサイト</span>
+          <span data-lang="en">Insights</span>
+          <span data-lang="zh">洞察</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <div class="max-w-2xl mx-auto space-y-8">
+        <div>
+          <h1 class="text-2xl font-medium text-gray-900 mb-2">
+            <span data-lang="ja">投稿スケジュール</span>
+            <span data-lang="en">Posting schedule</span>
+            <span data-lang="zh">发布时间表</span>
+          </h1>
+          <p class="text-sm text-gray-600">
+            <span data-lang="ja">いつ、どのくらいの頻度で自動投稿するかを設定</span>
+            <span data-lang="en">Configure when and how often to post automatically</span>
+            <span data-lang="zh">配置自动发布的时间和频率</span>
+          </p>
+        </div>
+
+        <!-- Posts per day -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <label class="block text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">1日の投稿数</span>
+            <span data-lang="en">Posts per day</span>
+            <span data-lang="zh">每天发布数</span>
+          </label>
+          <div class="grid grid-cols-5 gap-2">
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              1
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              2
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-900 bg-gray-900 text-white">
+              3
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              4
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              5
+            </button>
+          </div>
+        </div>
+
+        <!-- Time slots -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <label class="text-sm font-medium text-gray-900">
+              <span data-lang="ja">時間帯</span>
+              <span data-lang="en">Time slots</span>
+              <span data-lang="zh">时间段</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm text-gray-600">
+              <input type="checkbox" checked class="rounded">
+              <span data-lang="ja">時間帯内でランダム化</span>
+              <span data-lang="en">Randomize within slots</span>
+              <span data-lang="zh">时间段内随机化</span>
+            </label>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Morning -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" checked class="rounded">
+                  <span class="text-sm font-medium text-gray-900">
+                    <span data-lang="ja">朝</span>
+                    <span data-lang="en">Morning</span>
+                    <span data-lang="zh">早晨</span>
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 ml-6">
+                <input type="time" value="07:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                <span class="text-sm text-gray-500">
+                  <span data-lang="ja">〜</span>
+                  <span data-lang="en">to</span>
+                  <span data-lang="zh">至</span>
+                </span>
+                <input type="time" value="10:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+              </div>
+            </div>
+
+            <!-- Afternoon -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" checked class="rounded">
+                  <span class="text-sm font-medium text-gray-900">
+                    <span data-lang="ja">昼</span>
+                    <span data-lang="en">Afternoon</span>
+                    <span data-lang="zh">下午</span>
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 ml-6">
+                <input type="time" value="12:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                <span class="text-sm text-gray-500">
+                  <span data-lang="ja">〜</span>
+                  <span data-lang="en">to</span>
+                  <span data-lang="zh">至</span>
+                </span>
+                <input type="time" value="14:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+              </div>
+            </div>
+
+            <!-- Evening -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" class="rounded">
+                  <span class="text-sm font-medium text-gray-900">
+                    <span data-lang="ja">夕</span>
+                    <span data-lang="en">Evening</span>
+                    <span data-lang="zh">傍晚</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Night -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" checked class="rounded">
+                  <span class="text-sm font-medium text-gray-900">
+                    <span data-lang="ja">夜</span>
+                    <span data-lang="en">Night</span>
+                    <span data-lang="zh">夜晚</span>
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 ml-6">
+                <input type="time" value="20:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                <span class="text-sm text-gray-500">
+                  <span data-lang="ja">〜</span>
+                  <span data-lang="en">to</span>
+                  <span data-lang="zh">至</span>
+                </span>
+                <input type="time" value="22:00" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Min interval -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <label class="block text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">投稿間隔（最低）</span>
+            <span data-lang="en">Minimum interval between posts</span>
+            <span data-lang="zh">帖子之间的最小间隔</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-900 bg-gray-900 text-white">
+              <span data-lang="ja">3時間</span>
+              <span data-lang="en">3 hours</span>
+              <span data-lang="zh">3小时</span>
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              <span data-lang="ja">6時間</span>
+              <span data-lang="en">6 hours</span>
+              <span data-lang="zh">6小时</span>
+            </button>
+            <button class="py-3 text-sm font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">
+              <span data-lang="ja">12時間</span>
+              <span data-lang="en">12 hours</span>
+              <span data-lang="zh">12小时</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Auto mode -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <label class="block text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">投稿モード</span>
+            <span data-lang="en">Posting mode</span>
+            <span data-lang="zh">发布模式</span>
+          </label>
+          <div class="space-y-3">
+            <label class="flex items-start gap-3 p-3 border border-gray-900 bg-gray-50 rounded-lg cursor-pointer">
+              <input type="radio" name="mode" checked class="mt-0.5">
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <span data-lang="ja">セーフモード（推奨）</span>
+                  <span data-lang="en">Safe Mode (Recommended)</span>
+                  <span data-lang="zh">安全模式（推荐）</span>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                  <span data-lang="ja">投稿前に確認してから公開</span>
+                  <span data-lang="en">Review posts before they're published</span>
+                  <span data-lang="zh">发布前审查帖子</span>
+                </div>
+              </div>
+            </label>
+            <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="mode" class="mt-0.5">
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <span data-lang="ja">完全自動モード</span>
+                  <span data-lang="en">Full Auto Mode</span>
+                  <span data-lang="zh">全自动模式</span>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                  <span data-lang="ja">承認不要で自動投稿</span>
+                  <span data-lang="en">Posts are published automatically without approval</span>
+                  <span data-lang="zh">无需批准自动发布帖子</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <div class="flex justify-end">
+          <button class="px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+            <span data-lang="ja">設定を保存</span>
+            <span data-lang="en">Save settings</span>
+            <span data-lang="zh">保存设置</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>

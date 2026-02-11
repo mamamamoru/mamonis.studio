@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreadsAuto - AIで完全自動投稿</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-white">
+  <!-- Header -->
+  <header class="border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="text-xl font-medium text-gray-900">
+        ThreadsAuto
+      </div>
+      <nav class="flex items-center gap-6">
+        <a href="#pricing" class="text-sm text-gray-600 hover:text-gray-900">
+          <span data-lang="ja">料金</span>
+          <span data-lang="en">Pricing</span>
+          <span data-lang="zh">价格</span>
+        </a>
+        <a href="#docs" class="text-sm text-gray-600 hover:text-gray-900">
+          <span data-lang="ja">ドキュメント</span>
+          <span data-lang="en">Docs</span>
+          <span data-lang="zh">文档</span>
+        </a>
+        <a href="dashboard.html" class="text-sm text-gray-900 hover:text-gray-600">
+          <span data-lang="ja">ログイン</span>
+          <span data-lang="en">Log in</span>
+          <span data-lang="zh">登录</span>
+        </a>
+        
+        <!-- Language Switcher -->
+        <div class="relative">
+          <select 
+            id="langSelect" 
+            class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2 cursor-pointer"
+            onchange="switchLanguage(this.value)"
+          >
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main class="max-w-4xl mx-auto px-6 pt-32 pb-24">
+    <div class="text-center space-y-8">
+      <h1 class="text-5xl font-medium text-gray-900 leading-tight">
+        <span data-lang="ja">
+          ThreadsをAIで<br>完全自動投稿
+        </span>
+        <span data-lang="en">
+          Automate your Threads<br>with AI-powered posts
+        </span>
+        <span data-lang="zh">
+          使用AI自动发布<br>Threads内容
+        </span>
+      </h1>
+      
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <span data-lang="ja">
+          AI が投稿内容を生成し、自動でスケジュール投稿。<br>
+          手動作業は一切不要。
+        </span>
+        <span data-lang="en">
+          Generate content, schedule posts, and grow your audience.<br>
+          No manual work required.
+        </span>
+        <span data-lang="zh">
+          生成内容、安排发布、增长受众。<br>
+          无需手动操作。
+        </span>
+      </p>
+
+      <div class="pt-4">
+        <a href="dashboard.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+          <span data-lang="ja">Threads と連携する</span>
+          <span data-lang="en">Connect with Threads</span>
+          <span data-lang="zh">连接 Threads</span>
+        </a>
+      </div>
+
+      <div class="text-sm text-gray-500">
+        <span data-lang="ja">無料プランあり。クレジットカード不要。</span>
+        <span data-lang="en">Free plan available. No credit card required.</span>
+        <span data-lang="zh">提供免费方案。无需信用卡。</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32">
+      <div class="space-y-3">
+        <div class="text-sm font-medium text-gray-900">
+          <span data-lang="ja">AI 生成</span>
+          <span data-lang="en">AI Generation</span>
+          <span data-lang="zh">AI 生成</span>
+        </div>
+        <div class="text-sm text-gray-600 leading-relaxed">
+          <span data-lang="ja">
+            Claude があなたのスタイルとトピックに基づいて投稿を生成。
+            自然で本物のような、あなたらしいコンテンツ。
+          </span>
+          <span data-lang="en">
+            Claude generates posts based on your style and topics. 
+            Natural, authentic content that sounds like you.
+          </span>
+          <span data-lang="zh">
+            Claude 根据您的风格和主题生成帖子。
+            自然真实，听起来像您本人。
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="text-sm font-medium text-gray-900">
+          <span data-lang="ja">自動スケジュール</span>
+          <span data-lang="en">Auto Schedule</span>
+          <span data-lang="zh">自动安排</span>
+        </div>
+        <div class="text-sm text-gray-600 leading-relaxed">
+          <span data-lang="ja">
+            投稿時間を一度設定すれば、あとはシステムが全て自動処理。
+            起きたら投稿が完了している。
+          </span>
+          <span data-lang="en">
+            Set your posting times once. The system handles everything 
+            automatically. Wake up to published posts.
+          </span>
+          <span data-lang="zh">
+            设置一次发布时间，系统自动处理一切。
+            醒来就能看到已发布的帖子。
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="text-sm font-medium text-gray-900">
+          <span data-lang="ja">インサイト分析</span>
+          <span data-lang="en">Insights</span>
+          <span data-lang="zh">洞察分析</span>
+        </div>
+        <div class="text-sm text-gray-600 leading-relaxed">
+          <span data-lang="ja">
+            エンゲージメントを追跡し、何が効果的かを理解。
+            データに基づいてコンテンツ戦略を最適化。
+          </span>
+          <span data-lang="en">
+            Track engagement, understand what works. 
+            Optimize your content strategy with data.
+          </span>
+          <span data-lang="zh">
+            追踪互动，了解有效内容。
+            用数据优化内容策略。
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="mt-32 space-y-12">
+      <h2 class="text-2xl font-medium text-gray-900 text-center">
+        <span data-lang="ja">使い方</span>
+        <span data-lang="en">How it works</span>
+        <span data-lang="zh">使用方法</span>
+      </h2>
+
+      <div class="space-y-8">
+        <div class="flex gap-6">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600">
+            1
+          </div>
+          <div class="space-y-2">
+            <div class="text-sm font-medium text-gray-900">
+              <span data-lang="ja">AI にコンテンツについて伝える</span>
+              <span data-lang="en">Tell the AI about your content</span>
+              <span data-lang="zh">告诉 AI 您的内容</span>
+            </div>
+            <div class="text-sm text-gray-600 leading-relaxed">
+              <span data-lang="ja">
+                Claude と会話しながら、投稿スタイル、トピック、トーンを定義。
+                複雑なフォームは不要。
+              </span>
+              <span data-lang="en">
+                Have a conversation with Claude to define your posting style, 
+                topics, and tone. No complex forms.
+              </span>
+              <span data-lang="zh">
+                与 Claude 对话，定义您的发布风格、主题和语气。
+                无需复杂的表单。
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-6">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600">
+            2
+          </div>
+          <div class="space-y-2">
+            <div class="text-sm font-medium text-gray-900">
+              <span data-lang="ja">スケジュールを設定</span>
+              <span data-lang="en">Set your schedule</span>
+              <span data-lang="zh">设置时间表</span>
+            </div>
+            <div class="text-sm text-gray-600 leading-relaxed">
+              <span data-lang="ja">
+                投稿する時間と頻度を選択。朝、昼、夜。
+                システムがあなたのルーティンに適応。
+              </span>
+              <span data-lang="en">
+                Choose when and how often to post. Morning, afternoon, evening.
+                The system adapts to your routine.
+              </span>
+              <span data-lang="zh">
+                选择发布时间和频率。早晨、下午、晚上。
+                系统适应您的日常安排。
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-6">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600">
+            3
+          </div>
+          <div class="space-y-2">
+            <div class="text-sm font-medium text-gray-900">
+              <span data-lang="ja">確認して承認</span>
+              <span data-lang="en">Review and approve</span>
+              <span data-lang="zh">审查并批准</span>
+            </div>
+            <div class="text-sm text-gray-600 leading-relaxed">
+              <span data-lang="ja">
+                毎日投稿が生成される。公開前に確認するか、
+                完全自動モードを有効にして放置運用。
+              </span>
+              <span data-lang="en">
+                Posts are generated daily. Review them before publishing, or 
+                enable full auto mode for hands-free operation.
+              </span>
+              <span data-lang="zh">
+                每天生成帖子。发布前审查，
+                或启用全自动模式实现免提操作。
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-32 text-center">
+      <a href="dashboard.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+        <span data-lang="ja">無料で始める</span>
+        <span data-lang="en">Get started for free</span>
+        <span data-lang="zh">免费开始</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 mt-32">
+    <div class="max-w-6xl mx-auto px-6 py-12">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-sm text-gray-500">
+          © 2025 ThreadsAuto by mamonis.studio
+        </div>
+        <div class="flex gap-8">
+          <a href="#privacy" class="text-sm text-gray-500 hover:text-gray-900">
+            <span data-lang="ja">プライバシー</span>
+            <span data-lang="en">Privacy</span>
+            <span data-lang="zh">隐私</span>
+          </a>
+          <a href="#terms" class="text-sm text-gray-500 hover:text-gray-900">
+            <span data-lang="ja">利用規約</span>
+            <span data-lang="en">Terms</span>
+            <span data-lang="zh">条款</span>
+          </a>
+          <a href="https://x.com/mamonis" class="text-sm text-gray-500 hover:text-gray-900">X</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 言語切り替え
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // 初期言語設定
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>

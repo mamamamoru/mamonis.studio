@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 設定 - ThreadsAuto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="text-lg font-medium text-gray-900">
+        ThreadsAuto
+      </div>
+      <div class="flex items-center gap-4">
+        <select class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
+          <option>@username</option>
+        </select>
+        
+        <select 
+          id="langSelect" 
+          class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2"
+          onchange="switchLanguage(this.value)"
+        >
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white border-r border-gray-200">
+      <nav class="p-4 space-y-1">
+        <a href="dashboard-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">ダッシュボード</span>
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="zh">仪表板</span>
+        </a>
+        <a href="posts-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">投稿管理</span>
+          <span data-lang="en">Posts</span>
+          <span data-lang="zh">帖子管理</span>
+        </a>
+        <a href="ai-settings-ja.html" class="block px-3 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-lg">
+          <span data-lang="ja">AI 設定</span>
+          <span data-lang="en">AI Settings</span>
+          <span data-lang="zh">AI 设置</span>
+        </a>
+        <a href="schedule-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">スケジュール</span>
+          <span data-lang="en">Schedule</span>
+          <span data-lang="zh">时间表</span>
+        </a>
+        <a href="insights-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">インサイト</span>
+          <span data-lang="en">Insights</span>
+          <span data-lang="zh">洞察</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Profile list -->
+    <div class="w-64 bg-white border-r border-gray-200 p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-medium text-gray-900">
+          <span data-lang="ja">AI プロフィール</span>
+          <span data-lang="en">AI Profiles</span>
+          <span data-lang="zh">AI 配置</span>
+        </h2>
+        <button class="text-sm text-gray-600 hover:text-gray-900">
+          <span data-lang="ja">新規</span>
+          <span data-lang="en">New</span>
+          <span data-lang="zh">新建</span>
+        </button>
+      </div>
+
+      <div class="space-y-2">
+        <!-- Active profile -->
+        <button class="w-full text-left px-3 py-3 rounded-lg border border-gray-900 bg-gray-50">
+          <div class="text-sm font-medium text-gray-900">
+            <span data-lang="ja">テックデッドパン</span>
+            <span data-lang="en">Tech Deadpan</span>
+            <span data-lang="zh">技术冷幽默</span>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">
+            <span data-lang="ja">42回使用</span>
+            <span data-lang="en">Used 42 times</span>
+            <span data-lang="zh">使用42次</span>
+          </div>
+        </button>
+
+        <button class="w-full text-left px-3 py-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+          <div class="text-sm font-medium text-gray-900">
+            <span data-lang="ja">朝カジュアル</span>
+            <span data-lang="en">Morning Casual</span>
+            <span data-lang="zh">早晨休闲</span>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">
+            <span data-lang="ja">18回使用</span>
+            <span data-lang="en">Used 18 times</span>
+            <span data-lang="zh">使用18次</span>
+          </div>
+        </button>
+
+        <button class="w-full text-left px-3 py-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+          <div class="text-sm font-medium text-gray-900">
+            <span data-lang="ja">ビジネスプロ</span>
+            <span data-lang="en">Business Pro</span>
+            <span data-lang="zh">商务专业</span>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">
+            <span data-lang="ja">7回使用</span>
+            <span data-lang="en">Used 7 times</span>
+            <span data-lang="zh">使用7次</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="flex-1 flex flex-col">
+      <div class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-3xl mx-auto space-y-6">
+          <!-- AI Message -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600">
+              AI
+            </div>
+            <div class="flex-1 p-4 rounded-lg bg-white border border-gray-200 text-gray-900">
+              <div class="text-sm leading-relaxed whitespace-pre-line" data-lang="ja">どんな投稿を作成したいですか？例えば：
+
+- 専門的なテック系の洞察
+- 日常の気づきをカジュアルに
+- ビジネス向けの硬めの内容
+- 哲学的な深い考察</div>
+              <div class="text-sm leading-relaxed whitespace-pre-line" data-lang="en">What kind of posts do you want to create? For example:
+
+- Tech insights with expertise
+- Daily observations casually
+- Business content professionally
+- Deep philosophical thoughts</div>
+              <div class="text-sm leading-relaxed whitespace-pre-line" data-lang="zh">您想创建什么样的帖子？例如：
+
+- 专业的技术见解
+- 随意的日常观察
+- 专业的商务内容
+- 深刻的哲学思考</div>
+            </div>
+          </div>
+
+          <!-- User Message -->
+          <div class="flex gap-4 flex-row-reverse">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600">
+              <span data-lang="ja">あなた</span>
+              <span data-lang="en">You</span>
+              <span data-lang="zh">您</span>
+            </div>
+            <div class="flex-1 p-4 rounded-lg bg-gray-900 text-white">
+              <div class="text-sm leading-relaxed" data-lang="ja">
+                テック系の知見を、デッドパンな口調で。皮肉っぽいけど情報価値がある感じ。
+              </div>
+              <div class="text-sm leading-relaxed" data-lang="en">
+                Tech insights with a deadpan tone. Kind of sarcastic but still informative.
+              </div>
+              <div class="text-sm leading-relaxed" data-lang="zh">
+                带有冷幽默口吻的技术见解。有点讽刺但仍然有信息价值。
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Response -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600">
+              AI
+            </div>
+            <div class="flex-1 p-4 rounded-lg bg-white border border-gray-200 text-gray-900">
+              <div class="text-sm leading-relaxed space-y-4">
+                <p data-lang="ja">了解です。ドライで皮肉な口調で、技術に関する投稿を作成しますね。情報価値は維持します。</p>
+                <p data-lang="en">Got it. I'll create posts about technology with a dry, sarcastic style that's still informative.</p>
+                <p data-lang="zh">明白了。我会用冷幽默的风格创建技术帖子，同时保持信息价值。</p>
+                
+                <div class="border-t border-gray-200 pt-4">
+                  <div class="text-xs font-medium text-gray-500 mb-2">
+                    <span data-lang="ja">プレビュー</span>
+                    <span data-lang="en">PREVIEW</span>
+                    <span data-lang="zh">预览</span>
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    Cloudflare Workers are amazing. Except when you need to debug them. Then it's a special kind of pain.
+                  </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                  <button class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                    <span data-lang="ja">完璧</span>
+                    <span data-lang="en">Perfect</span>
+                    <span data-lang="zh">完美</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">調整</span>
+                    <span data-lang="en">Adjust</span>
+                    <span data-lang="zh">调整</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="border-t border-gray-200 bg-white p-6">
+        <div class="max-w-3xl mx-auto flex gap-3">
+          <input
+            type="text"
+            class="flex-1 px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+          >
+            <span data-lang="ja" class="absolute inset-0 flex items-center px-4 text-gray-400 pointer-events-none">コンテンツスタイルを説明...</span>
+            <span data-lang="en" class="absolute inset-0 flex items-center px-4 text-gray-400 pointer-events-none">Describe your content style...</span>
+            <span data-lang="zh" class="absolute inset-0 flex items-center px-4 text-gray-400 pointer-events-none">描述您的内容风格...</span>
+          </input>
+          <button class="px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+            <span data-lang="ja">送信</span>
+            <span data-lang="en">Send</span>
+            <span data-lang="zh">发送</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>
