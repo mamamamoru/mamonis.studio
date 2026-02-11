@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン - ThreadsAuto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="min-h-screen flex flex-col items-center justify-center px-6">
+    <!-- Language Switcher -->
+    <div class="absolute top-6 right-6">
+      <select 
+        id="langSelect" 
+        class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2"
+        onchange="switchLanguage(this.value)"
+      >
+        <option value="ja">日本語</option>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <div class="w-full max-w-md">
+      <!-- Logo -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-medium text-gray-900 mb-2">ThreadsAuto</h1>
+        <p class="text-sm text-gray-600">
+          <span data-lang="ja">AI で Threads を完全自動化</span>
+          <span data-lang="en">Automate Threads with AI</span>
+          <span data-lang="zh">使用 AI 自动化 Threads</span>
+        </p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="bg-white border border-gray-200 rounded-lg p-8">
+        <h2 class="text-lg font-medium text-gray-900 mb-6 text-center">
+          <span data-lang="ja">ログイン</span>
+          <span data-lang="en">Log in</span>
+          <span data-lang="zh">登录</span>
+        </h2>
+
+        <!-- Threads Login Button -->
+        <button 
+          onclick="connectThreads()"
+          class="w-full px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+          </svg>
+          <span data-lang="ja">Threads でログイン</span>
+          <span data-lang="en">Log in with Threads</span>
+          <span data-lang="zh">使用 Threads 登录</span>
+        </button>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            <span data-lang="ja">
+              アカウントをお持ちでない方は、<br>
+              ログインすると自動的に作成されます
+            </span>
+            <span data-lang="en">
+              Don't have an account?<br>
+              One will be created when you log in
+            </span>
+            <span data-lang="zh">
+              还没有账户？<br>
+              登录时将自动创建
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="mt-6 text-center space-y-2">
+        <p class="text-xs text-gray-500">
+          <span data-lang="ja">
+            ログインすることで、
+            <a href="#terms" class="underline hover:text-gray-900">利用規約</a>
+            と
+            <a href="#privacy" class="underline hover:text-gray-900">プライバシーポリシー</a>
+            に同意したものとみなされます
+          </span>
+          <span data-lang="en">
+            By logging in, you agree to our
+            <a href="#terms" class="underline hover:text-gray-900">Terms</a>
+            and
+            <a href="#privacy" class="underline hover:text-gray-900">Privacy Policy</a>
+          </span>
+          <span data-lang="zh">
+            登录即表示您同意我们的
+            <a href="#terms" class="underline hover:text-gray-900">条款</a>
+            和
+            <a href="#privacy" class="underline hover:text-gray-900">隐私政策</a>
+          </span>
+        </p>
+        
+        <p class="text-xs text-gray-500">
+          <a href="landing.html" class="underline hover:text-gray-900">
+            <span data-lang="ja">← トップページに戻る</span>
+            <span data-lang="en">← Back to home</span>
+            <span data-lang="zh">← 返回首页</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function connectThreads() {
+      // TODO: 実際のThreads OAuth URLに置き換える
+      // 現在は仮でダッシュボードに遷移
+      alert('Threads OAuth連携を開始します...\n（実装時はThreads APIのOAuth URLにリダイレクトされます）');
+      window.location.href = 'dashboard-ja.html';
+    }
+
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>
