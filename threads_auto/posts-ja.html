@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投稿管理 - ThreadsAuto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="text-lg font-medium text-gray-900">
+        ThreadsAuto
+      </div>
+      <div class="flex items-center gap-4">
+        <select class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
+          <option>@username</option>
+        </select>
+        
+        <select 
+          id="langSelect" 
+          class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2"
+          onchange="switchLanguage(this.value)"
+        >
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white border-r border-gray-200">
+      <nav class="p-4 space-y-1">
+        <a href="dashboard-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">ダッシュボード</span>
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="zh">仪表板</span>
+        </a>
+        <a href="posts-ja.html" class="block px-3 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-lg">
+          <span data-lang="ja">投稿管理</span>
+          <span data-lang="en">Posts</span>
+          <span data-lang="zh">帖子管理</span>
+        </a>
+        <a href="ai-settings-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">AI 設定</span>
+          <span data-lang="en">AI Settings</span>
+          <span data-lang="zh">AI 设置</span>
+        </a>
+        <a href="schedule-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">スケジュール</span>
+          <span data-lang="en">Schedule</span>
+          <span data-lang="zh">时间表</span>
+        </a>
+        <a href="insights-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">インサイト</span>
+          <span data-lang="en">Insights</span>
+          <span data-lang="zh">洞察</span>
+        </a>
+        
+        <div class="pt-4 border-t border-gray-200 mt-4">
+          <a href="#settings" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+            <span data-lang="ja">設定</span>
+            <span data-lang="en">Settings</span>
+            <span data-lang="zh">设置</span>
+          </a>
+          <a href="#pricing" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+            <span data-lang="ja">プラン変更</span>
+            <span data-lang="en">Upgrade</span>
+            <span data-lang="zh">升级</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <div class="max-w-5xl mx-auto">
+        <h1 class="text-2xl font-medium text-gray-900 mb-6">
+          <span data-lang="ja">投稿管理</span>
+          <span data-lang="en">Posts</span>
+          <span data-lang="zh">帖子管理</span>
+        </h1>
+
+        <!-- Tabs -->
+        <div class="border-b border-gray-200 mb-6">
+          <nav class="flex gap-6">
+            <button class="px-1 py-3 text-sm font-medium text-gray-900 border-b-2 border-gray-900">
+              <span data-lang="ja">承認待ち (3)</span>
+              <span data-lang="en">Pending (3)</span>
+              <span data-lang="zh">待审批 (3)</span>
+            </button>
+            <button class="px-1 py-3 text-sm text-gray-600 hover:text-gray-900">
+              <span data-lang="ja">予約済み (5)</span>
+              <span data-lang="en">Scheduled (5)</span>
+              <span data-lang="zh">已安排 (5)</span>
+            </button>
+            <button class="px-1 py-3 text-sm text-gray-600 hover:text-gray-900">
+              <span data-lang="ja">投稿済み (42)</span>
+              <span data-lang="en">Posted (42)</span>
+              <span data-lang="zh">已发布 (42)</span>
+            </button>
+            <button class="px-1 py-3 text-sm text-gray-600 hover:text-gray-900">
+              <span data-lang="ja">失敗 (0)</span>
+              <span data-lang="en">Failed (0)</span>
+              <span data-lang="zh">失败 (0)</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" class="rounded">
+            <span class="text-sm text-gray-600">
+              <span data-lang="ja">3件選択中</span>
+              <span data-lang="en">3 selected</span>
+              <span data-lang="zh">已选择3个</span>
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+              <span data-lang="ja">すべて承認</span>
+              <span data-lang="en">Approve all</span>
+              <span data-lang="zh">全部批准</span>
+            </button>
+            <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+              <span data-lang="ja">すべて削除</span>
+              <span data-lang="en">Delete all</span>
+              <span data-lang="zh">全部删除</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Posts List -->
+        <div class="space-y-4">
+          <!-- Post 1 -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-start gap-4">
+              <input type="checkbox" checked class="mt-1 rounded">
+              <div class="flex-1">
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      <span data-lang="ja">今日 15:30</span>
+                      <span data-lang="en">Today, 15:30</span>
+                      <span data-lang="zh">今天 15:30</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      <span data-lang="ja">AI: テックデッドパン</span>
+                      <span data-lang="en">AI: Tech Deadpan</span>
+                      <span data-lang="zh">AI: 技术冷幽默</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                    <span data-lang="ja">予約済み</span>
+                    <span data-lang="en">Scheduled</span>
+                    <span data-lang="zh">已安排</span>
+                  </span>
+                </div>
+
+                <div class="text-sm text-gray-900 leading-relaxed mb-4">
+                  Cloudflare Workers are amazing. Except when you need to debug them. Then it's a special kind of pain.
+                </div>
+
+                <div class="text-xs text-gray-500 mb-4">106/500</div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                    <span data-lang="ja">承認</span>
+                    <span data-lang="en">Approve</span>
+                    <span data-lang="zh">批准</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">編集</span>
+                    <span data-lang="en">Edit</span>
+                    <span data-lang="zh">编辑</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">時間変更</span>
+                    <span data-lang="en">Reschedule</span>
+                    <span data-lang="zh">更改时间</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50">
+                    <span data-lang="ja">削除</span>
+                    <span data-lang="en">Delete</span>
+                    <span data-lang="zh">删除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 2 -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-start gap-4">
+              <input type="checkbox" checked class="mt-1 rounded">
+              <div class="flex-1">
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      <span data-lang="ja">今日 20:00</span>
+                      <span data-lang="en">Today, 20:00</span>
+                      <span data-lang="zh">今天 20:00</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      <span data-lang="ja">AI: テックデッドパン</span>
+                      <span data-lang="en">AI: Tech Deadpan</span>
+                      <span data-lang="zh">AI: 技术冷幽默</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                    <span data-lang="ja">予約済み</span>
+                    <span data-lang="en">Scheduled</span>
+                    <span data-lang="zh">已安排</span>
+                  </span>
+                </div>
+
+                <div class="text-sm text-gray-900 leading-relaxed mb-4">
+                  The best code is the code you delete. Second best is the code you never write.
+                </div>
+
+                <div class="text-xs text-gray-500 mb-4">88/500</div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                    <span data-lang="ja">承認</span>
+                    <span data-lang="en">Approve</span>
+                    <span data-lang="zh">批准</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">編集</span>
+                    <span data-lang="en">Edit</span>
+                    <span data-lang="zh">编辑</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">時間変更</span>
+                    <span data-lang="en">Reschedule</span>
+                    <span data-lang="zh">更改时间</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50">
+                    <span data-lang="ja">削除</span>
+                    <span data-lang="en">Delete</span>
+                    <span data-lang="zh">删除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 3 -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex items-start gap-4">
+              <input type="checkbox" checked class="mt-1 rounded">
+              <div class="flex-1">
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      <span data-lang="ja">明日 07:30</span>
+                      <span data-lang="en">Tomorrow, 07:30</span>
+                      <span data-lang="zh">明天 07:30</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      <span data-lang="ja">AI: 朝カジュアル</span>
+                      <span data-lang="en">AI: Morning Casual</span>
+                      <span data-lang="zh">AI: 早晨休闲</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                    <span data-lang="ja">予約済み</span>
+                    <span data-lang="en">Scheduled</span>
+                    <span data-lang="zh">已安排</span>
+                  </span>
+                </div>
+
+                <div class="text-sm text-gray-900 leading-relaxed mb-4">
+                  Just discovered a bug in production. Again. At least it's consistent.
+                </div>
+
+                <div class="text-xs text-gray-500 mb-4">78/500</div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                    <span data-lang="ja">承認</span>
+                    <span data-lang="en">Approve</span>
+                    <span data-lang="zh">批准</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">編集</span>
+                    <span data-lang="en">Edit</span>
+                    <span data-lang="zh">编辑</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                    <span data-lang="ja">時間変更</span>
+                    <span data-lang="en">Reschedule</span>
+                    <span data-lang="zh">更改时间</span>
+                  </button>
+                  <button class="px-4 py-2 bg-white border border-gray-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50">
+                    <span data-lang="ja">削除</span>
+                    <span data-lang="en">Delete</span>
+                    <span data-lang="zh">删除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>インサイト - ThreadsAuto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-lang]:not([data-lang="ja"]) { display: none; }
+    html[lang="en"] [data-lang="ja"],
+    html[lang="en"] [data-lang="zh"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="zh"] [data-lang="ja"],
+    html[lang="zh"] [data-lang="en"] { display: none; }
+    html[lang="zh"] [data-lang="zh"] { display: block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="text-lg font-medium text-gray-900">
+        ThreadsAuto
+      </div>
+      <div class="flex items-center gap-4">
+        <select class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
+          <option>@username</option>
+        </select>
+        
+        <select 
+          id="langSelect" 
+          class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2"
+          onchange="switchLanguage(this.value)"
+        >
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white border-r border-gray-200">
+      <nav class="p-4 space-y-1">
+        <a href="dashboard-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">ダッシュボード</span>
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="zh">仪表板</span>
+        </a>
+        <a href="posts-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">投稿管理</span>
+          <span data-lang="en">Posts</span>
+          <span data-lang="zh">帖子管理</span>
+        </a>
+        <a href="ai-settings-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">AI 設定</span>
+          <span data-lang="en">AI Settings</span>
+          <span data-lang="zh">AI 设置</span>
+        </a>
+        <a href="schedule-ja.html" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+          <span data-lang="ja">スケジュール</span>
+          <span data-lang="en">Schedule</span>
+          <span data-lang="zh">时间表</span>
+        </a>
+        <a href="insights-ja.html" class="block px-3 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-lg">
+          <span data-lang="ja">インサイト</span>
+          <span data-lang="en">Insights</span>
+          <span data-lang="zh">洞察</span>
+        </a>
+        
+        <div class="pt-4 border-t border-gray-200 mt-4">
+          <a href="#settings" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+            <span data-lang="ja">設定</span>
+            <span data-lang="en">Settings</span>
+            <span data-lang="zh">设置</span>
+          </a>
+          <a href="#pricing" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
+            <span data-lang="ja">プラン変更</span>
+            <span data-lang="en">Upgrade</span>
+            <span data-lang="zh">升级</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <div class="max-w-5xl mx-auto space-y-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl font-medium text-gray-900">
+            <span data-lang="ja">インサイト</span>
+            <span data-lang="en">Insights</span>
+            <span data-lang="zh">洞察</span>
+          </h1>
+          <select class="text-sm text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
+            <option data-lang="ja">過去7日間</option>
+            <option data-lang="en">Last 7 days</option>
+            <option data-lang="zh">过去7天</option>
+            
+            <option data-lang="ja">過去30日間</option>
+            <option data-lang="en">Last 30 days</option>
+            <option data-lang="zh">过去30天</option>
+            
+            <option data-lang="ja">過去90日間</option>
+            <option data-lang="en">Last 90 days</option>
+            <option data-lang="zh">过去90天</option>
+          </select>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="text-xs text-gray-500 mb-2">
+              <span data-lang="ja">総エンゲージメント</span>
+              <span data-lang="en">Total Engagement</span>
+              <span data-lang="zh">总互动量</span>
+            </div>
+            <div class="text-3xl font-medium text-gray-900">1,234</div>
+            <div class="text-xs text-green-600 mt-1">+12%</div>
+          </div>
+
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="text-xs text-gray-500 mb-2">
+              <span data-lang="ja">いいね</span>
+              <span data-lang="en">Likes</span>
+              <span data-lang="zh">点赞</span>
+            </div>
+            <div class="text-3xl font-medium text-gray-900">842</div>
+            <div class="text-xs text-green-600 mt-1">+8%</div>
+          </div>
+
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="text-xs text-gray-500 mb-2">
+              <span data-lang="ja">返信</span>
+              <span data-lang="en">Replies</span>
+              <span data-lang="zh">回复</span>
+            </div>
+            <div class="text-3xl font-medium text-gray-900">213</div>
+            <div class="text-xs text-green-600 mt-1">+15%</div>
+          </div>
+
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="text-xs text-gray-500 mb-2">
+              <span data-lang="ja">リポスト</span>
+              <span data-lang="en">Reposts</span>
+              <span data-lang="zh">转发</span>
+            </div>
+            <div class="text-3xl font-medium text-gray-900">179</div>
+            <div class="text-xs text-green-600 mt-1">+22%</div>
+          </div>
+        </div>
+
+        <!-- Engagement Chart -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <h2 class="text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">エンゲージメント推移</span>
+            <span data-lang="en">Engagement Over Time</span>
+            <span data-lang="zh">互动趋势</span>
+          </h2>
+          <div class="h-64 flex items-end justify-between gap-2">
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 40%"></div>
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 55%"></div>
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 70%"></div>
+            <div class="flex-1 bg-gray-900 rounded-t" style="height: 85%"></div>
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 60%"></div>
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 75%"></div>
+            <div class="flex-1 bg-gray-100 rounded-t" style="height: 50%"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-xs text-gray-500">
+            <span data-lang="ja">月</span>
+            <span data-lang="en">Mon</span>
+            <span data-lang="zh">周一</span>
+            
+            <span data-lang="ja">火</span>
+            <span data-lang="en">Tue</span>
+            <span data-lang="zh">周二</span>
+            
+            <span data-lang="ja">水</span>
+            <span data-lang="en">Wed</span>
+            <span data-lang="zh">周三</span>
+            
+            <span data-lang="ja">木</span>
+            <span data-lang="en">Thu</span>
+            <span data-lang="zh">周四</span>
+            
+            <span data-lang="ja">金</span>
+            <span data-lang="en">Fri</span>
+            <span data-lang="zh">周五</span>
+            
+            <span data-lang="ja">土</span>
+            <span data-lang="en">Sat</span>
+            <span data-lang="zh">周六</span>
+            
+            <span data-lang="ja">日</span>
+            <span data-lang="en">Sun</span>
+            <span data-lang="zh">周日</span>
+          </div>
+        </div>
+
+        <!-- Best Performing Posts -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <h2 class="text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">パフォーマンスの高い投稿</span>
+            <span data-lang="en">Top Performing Posts</span>
+            <span data-lang="zh">表现最佳的帖子</span>
+          </h2>
+
+          <div class="space-y-4">
+            <!-- Post 1 -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="text-sm text-gray-900 mb-3">
+                npm's version management is truly a masterpiece of human ingenuity. Because it breaks every single time.
+              </div>
+              <div class="flex gap-6 text-xs text-gray-600">
+                <span>❤️ 142</span>
+                <span>💬 28</span>
+                <span>🔄 34</span>
+                <span>
+                  <span data-lang="ja">エンゲージメント率: 8.2%</span>
+                  <span data-lang="en">Engagement: 8.2%</span>
+                  <span data-lang="zh">互动率: 8.2%</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="text-sm text-gray-900 mb-3">
+                Cloudflare Workers are amazing. Except when you need to debug them. Then it's a special kind of pain.
+              </div>
+              <div class="flex gap-6 text-xs text-gray-600">
+                <span>❤️ 98</span>
+                <span>💬 15</span>
+                <span>🔄 22</span>
+                <span>
+                  <span data-lang="ja">エンゲージメント率: 6.8%</span>
+                  <span data-lang="en">Engagement: 6.8%</span>
+                  <span data-lang="zh">互动率: 6.8%</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="text-sm text-gray-900 mb-3">
+                The best code is the code you delete. Second best is the code you never write.
+              </div>
+              <div class="flex gap-6 text-xs text-gray-600">
+                <span>❤️ 87</span>
+                <span>💬 12</span>
+                <span>🔄 18</span>
+                <span>
+                  <span data-lang="ja">エンゲージメント率: 5.9%</span>
+                  <span data-lang="en">Engagement: 5.9%</span>
+                  <span data-lang="zh">互动率: 5.9%</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Profile Performance -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <h2 class="text-sm font-medium text-gray-900 mb-4">
+            <span data-lang="ja">AI設定別パフォーマンス</span>
+            <span data-lang="en">Performance by AI Profile</span>
+            <span data-lang="zh">按AI配置的表现</span>
+          </h2>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <span data-lang="ja">テックデッドパン</span>
+                  <span data-lang="en">Tech Deadpan</span>
+                  <span data-lang="zh">技术冷幽默</span>
+                </div>
+                <div class="text-xs text-gray-500">
+                  <span data-lang="ja">42投稿</span>
+                  <span data-lang="en">42 posts</span>
+                  <span data-lang="zh">42篇帖子</span>
+                </div>
+              </div>
+              <div class="text-sm font-medium text-gray-900">
+                <span data-lang="ja">平均7.2%</span>
+                <span data-lang="en">Avg 7.2%</span>
+                <span data-lang="zh">平均7.2%</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <span data-lang="ja">朝カジュアル</span>
+                  <span data-lang="en">Morning Casual</span>
+                  <span data-lang="zh">早晨休闲</span>
+                </div>
+                <div class="text-xs text-gray-500">
+                  <span data-lang="ja">18投稿</span>
+                  <span data-lang="en">18 posts</span>
+                  <span data-lang="zh">18篇帖子</span>
+                </div>
+              </div>
+              <div class="text-sm font-medium text-gray-900">
+                <span data-lang="ja">平均5.8%</span>
+                <span data-lang="en">Avg 5.8%</span>
+                <span data-lang="zh">平均5.8%</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-900">
+                  <span data-lang="ja">ビジネスプロ</span>
+                  <span data-lang="en">Business Pro</span>
+                  <span data-lang="zh">商务专业</span>
+                </div>
+                <div class="text-xs text-gray-500">
+                  <span data-lang="ja">7投稿</span>
+                  <span data-lang="en">7 posts</span>
+                  <span data-lang="zh">7篇帖子</span>
+                </div>
+              </div>
+              <div class="text-sm font-medium text-gray-900">
+                <span data-lang="ja">平均4.3%</span>
+                <span data-lang="en">Avg 4.3%</span>
+                <span data-lang="zh">平均4.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLanguage', lang);
+    }
+
+    (function() {
+      const saved = localStorage.getItem('preferredLanguage');
+      const browser = navigator.language.split('-')[0];
+      const lang = saved || (browser === 'ja' ? 'ja' : browser === 'zh' ? 'zh' : 'en');
+      
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+    })();
+  </script>
+</body>
+</html>
